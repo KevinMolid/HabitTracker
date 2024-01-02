@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habit Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link reel="stylesheet">
+    
+    <!-- Font awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+     <!-- FullCalendar's CSS -->
+    <link href='https://unpkg.com/fullcalendar@5/main.min.css' rel='stylesheet' />
+
+    <!-- FullCalendar's JavaScript -->
+    <script src='https://unpkg.com/fullcalendar@5/main.min.js'></script>
+
+  </head>
+  <body>
+    <div class="content-wrapper">
+      <header class="main-header">
+          <h1 class="title">Habit Tracker</h1>
+          <div class="menu-icon">
+            <i class="fa-solid fa-bars"></i>
+          </div>
+      </header>
+
+      <main>
+          <section class="calendar">
+            <header class="calendar-header">
+              <div id="prev" class="prev-next-icon">
+                <i class="fa-solid fa-chevron-left"></i>
+              </div>
+              <p class="current-date">Dec 2023</p>
+              <div id="next" class="prev-next-icon">
+                <i class="fa-solid fa-chevron-right"></i>
+              </div>
+            </header>
+            <ul class="weeks">
+              <li>Sun</li>
+              <li>Mon</li>
+              <li>Tue</li>
+              <li>Wed</li>
+              <li>Thu</li>
+              <li>Fri</li>
+              <li>Sat</li>
+            </ul>
+            <ul class="days">
+            </ul>
+          </section>
+        
+          <section id="habit-list">
+              <h2>Your Habits</h2>
+              <ul id="habits">
+                  <!-- Habit items will be added here dynamically with JavaScript -->
+              </ul>
+              <button id="add-habit"><i class="fa-solid fa-plus"></i> New Habit</button>
+          </section>
+
+          <section id="habit-form" style="display:none;">
+              <h2>Add/Edit Habit</h2>
+              <form>
+                  <label for="habit-name">Habit Name:</label>
+                  <input type="text" id="habit-name" name="habit-name" required>
+
+                  <label for="habit-frequency">Frequency:</label>
+                  <select id="habit-frequency" name="habit-frequency">
+                      <option value="daily">Daily</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="monthly">Monthly</option>
+                  </select>
+
+                  <button type="submit">Save Habit</button>
+              </form>
+          </section>
+      </main>
+
+      <footer>
+          <p>&copy; <span id="current-year">2000</span> Kevin Molid</p>
+      </footer>
+    </div>
+
+    <script src="index.js" defer></script>
+  </body>
+</html>
