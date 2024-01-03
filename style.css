@@ -148,12 +148,55 @@ ul {
     list-style-type: none;
 }
 
-ul li { /* Habits */
+.habit { /* Habits */
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: #222;
     margin-bottom: 10px;
-    padding: 10px 24px;
+    padding: 0 1em;
     border-radius: 5px;
+}
+
+.habit p {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+.habit .delete-btn {
+  color: #999;
+  background: #333;
+}
+
+.habit .delete-btn:hover {
+  color: #aaa;
+  background: #393939;
+}
+
+/* Habit colors */
+
+.pink button {
+  background: #e215ef;
+}
+
+.pink button:hover {
+  background: #ce16da;
+}
+
+.blue button {
+  background: #15afef;
+}
+
+.blue button:hover {
+  background: #16a1da;
+}
+
+.orange button {
+  background: #ef7215;
+}
+
+.orange button:hover {
+  background: #da6a16;
 }
 
 button {
@@ -168,7 +211,7 @@ button {
 }
 
 button:hover {
-    background: #e06d10;
+    background: #da6a16;
 }
 
 #habit-form {

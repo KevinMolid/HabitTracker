@@ -1,3 +1,4 @@
+// ********** CALENDAR **********
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
 prevNextIcon = document.querySelectorAll('.prev-next-icon')
@@ -55,35 +56,72 @@ prevNextIcon.forEach(icon => {
     })
 })
 
+// ********** HABITS **********
+
 // Add event listeners to document
 document.addEventListener('DOMContentLoaded', () => {
-    const habitsList = document.getElementById('habits');
-    const addHabitButton = document.getElementById('add-habit');
-    const habitForm = document.getElementById('habit-form');
-    const habitNameInput = document.getElementById('habit-name');
+    const habitsList = document.getElementById('habits')
+    const addHabitButton = document.getElementById('add-habit')
+    const habitForm = document.getElementById('habit-form')
+    const habitNameInput = document.getElementById('habit-name')
 
     // Function to add a habit to the list
     function addHabit(habitName) {
-        const listItem = document.createElement('li');
-        listItem.textContent = habitName;
-        habitsList.appendChild(listItem);
+        let colorList = [0, 0, 0] // pink, blue, orange
+
+        // Check for existing habits and add to color list
+        for (habit of habitsList.children) {
+            if (habit.classList.contains('pink')) {
+                colorList[0] = 1
+            }
+            if (habit.classList.contains('blue')) {
+                colorList[1] = 1
+            }
+            if (habit.classList.contains('orange')) {
+                colorList[2] = 1
+            }
+        }
+
+        // set color
+        let color = ''
+        if (colorList[0] === 0) {
+            color = 'pink'
+        }
+        else if (colorList[1] === 0) {
+            color = 'blue'
+        }
+        else if (colorList[2] === 0) {
+            color = 'orange'
+        }
+
+        const listItem = document.createElement('li')
+        listItem.classList.add('habit') // Add the habit class for general styling
+        listItem.classList.add(`${color}`) // Add color class for specific styling
+        listItem.innerHTML = `
+            <p>${habitName}</p>
+            <div>
+                <button class="delete-btn">Delete Habit</button>
+                <button>Done</button>
+            </div>
+        `
+        habitsList.appendChild(listItem)
     }
 
     // Show the form when the Add New Habit button is clicked
     addHabitButton.addEventListener('click', () => {
-        habitForm.style.display = 'block';
+        habitForm.style.display = 'block'
     });
 
     // Handle the form submission
     habitForm.addEventListener('submit', (event) => {
-        event.preventDefault();
+        event.preventDefault()
         const habitName = habitNameInput.value.trim();
         if (habitName) {
-            addHabit(habitName);
-            habitNameInput.value = ''; // Reset input field
-            habitForm.style.display = 'none'; // Hide the form again
+            addHabit(habitName)
+            habitNameInput.value = '' // Reset input field
+            habitForm.style.display = 'none' // Hide the form again
         } else {
-            alert('Please enter a habit name.');
+            alert('Please enter a habit name.')
         }
     });
 });
