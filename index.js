@@ -66,7 +66,13 @@ prevNextIcon.forEach(icon => {
     })
 })
 
+
 // ********** HABITS **********
+for (habit of habitList){
+    console.log(habit)
+}
+
+// ********** NEW HABITS **********
 
 // Add event listeners to document
 document.addEventListener('DOMContentLoaded', () => {
@@ -119,7 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save habit to Local Storage
         habitList.push({
-            habit: `${habitName}`
+            habit: `${habitName}`,
+            color: `${color}`
         })
         localStorage.setItem('habitList', JSON.stringify(habitList))
     }
