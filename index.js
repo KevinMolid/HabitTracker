@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         habitList.push({
             habit: `${habitName}`
         })
-        localStorage.setItem('habitList', JSON.stringify([]))
+        localStorage.setItem('habitList', JSON.stringify(habitList))
     }
 
     // Show the form when the Add New Habit button is clicked
