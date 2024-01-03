@@ -1,3 +1,13 @@
+// Get items from local storage
+let habitList = JSON.parse(localStorage.getItem('habitList'))
+if (!habitList) {
+    localStorage.setItem('habitList', JSON.stringify([]))
+    habitList = JSON.parse(localStorage.getItem('habitList'))
+}
+
+console.log(habitList)
+
+
 // ********** CALENDAR **********
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
@@ -100,11 +110,18 @@ document.addEventListener('DOMContentLoaded', () => {
         listItem.innerHTML = `
             <p>${habitName}</p>
             <div>
-                <button class="delete-btn">Delete Habit</button>
+                <button class="delete-btn">Delete</button>
                 <button>Done</button>
             </div>
         `
         habitsList.appendChild(listItem)
+
+
+        // Save habit to Local Storage
+        habitList.push({
+            habit: `${habitName}`
+        })
+        localStorage.setItem('habitList', JSON.stringify([]))
     }
 
     // Show the form when the Add New Habit button is clicked
