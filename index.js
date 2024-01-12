@@ -1,13 +1,66 @@
-const habitsList = document.getElementById('habits')
+// Variables
+const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
+const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
+let habitList = []
 
-// localStorage.clear() // Clear localStorage
-
-// Get items from local storage
-let habitList = JSON.parse(localStorage.getItem('habitList'))
-if (!habitList) {
-    localStorage.setItem('habitList', JSON.stringify([]))
-    habitList = JSON.parse(localStorage.getItem('habitList'))
+// ********** FUNCTIONS **********
+// Clear localStorage
+function clearLocalStorage(){
+    console.log('clearing storage')
+    localStorage.clear() 
 }
+
+// Clear habitsList
+function clearHabitsList(){
+    habitsList.innerHTML = ''
+}
+
+function fetchLocalStorage(){
+    console.log('featching storage')
+    habitList = JSON.parse(localStorage.getItem('habitList'))
+    // If no Local Storage -> Set local storage to empty list
+    if (!habitList) {
+        localStorage.setItem('habitList', JSON.stringify([]))
+        habitList = JSON.parse(localStorage.getItem('habitList'))
+    }
+}
+
+// ********** HABITS **********
+// Render habits to screen
+function renderHabits(){
+    console.log('rendering habits')
+    for (habit of habitList){
+        // Create element and render to screen
+        const listItem = document.createElement('li')
+        listItem.classList.add('habit') // Add the habit class for general styling
+        listItem.classList.add(`${habit.color}`) // Add color class for specific styling
+        listItem.innerHTML = `
+            <p>${habit.habitName}</p>
+            <div>
+                <button id="delete-${habit.habitName}" class="delete-btn">Delete</button>
+                <button>Done</button>
+            </div>
+        `
+        habitsList.appendChild(listItem)
+    }
+}
+
+
+// Run app
+// Get items from local storage
+fetchLocalStorage()
+// Render habits to screen
+renderHabits()
+
+// Event listeners
+deleteAllHabitsBtn.addEventListener('click', function(){
+    clearLocalStorage()
+    clearHabitsList()
+    // Set Local storage to empty list   
+    fetchLocalStorage() 
+})
+
+
 
 
 // ********** CALENDAR **********
@@ -95,24 +148,6 @@ prevNextIcon.forEach(icon => {
     })
 })
 
-
-// ********** HABITS **********
-// Render habits to screen
-for (habit of habitList){
-    console.log(habit)
-    // Create element and render to screen
-    const listItem = document.createElement('li')
-    listItem.classList.add('habit') // Add the habit class for general styling
-    listItem.classList.add(`${habit.color}`) // Add color class for specific styling
-    listItem.innerHTML = `
-        <p>${habit.habitName}</p>
-        <div>
-            <button id="delete-${habit.habitName}" class="delete-btn">Delete</button>
-            <button>Done</button>
-        </div>
-    `
-    habitsList.appendChild(listItem)
-}
 
 // ********** NEW HABITS **********
 
