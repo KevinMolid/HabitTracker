@@ -6,7 +6,6 @@ let habitList = []
 // ********** FUNCTIONS **********
 // Clear localStorage
 function clearLocalStorage(){
-    console.log('clearing storage')
     localStorage.clear() 
 }
 
@@ -16,7 +15,6 @@ function clearHabitsList(){
 }
 
 function fetchLocalStorage(){
-    console.log('featching storage')
     habitList = JSON.parse(localStorage.getItem('habitList'))
     // If no Local Storage -> Set local storage to empty list
     if (!habitList) {
@@ -28,7 +26,6 @@ function fetchLocalStorage(){
 // ********** HABITS **********
 // Render habits to screen
 function renderHabits(){
-    console.log('rendering habits')
     for (habit of habitList){
         // Create element and render to screen
         const listItem = document.createElement('li')

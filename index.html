@@ -62,18 +62,25 @@
             </ul>
           </section>
         
+          <!-- HABIT SECTION -->
           <section id="habit-list">
+            <!-- Habit header -->
             <div class="habit-list-header">
-              <h2>Your Habits</h2>
-              <button class="delete-all-habits-btn" id="delete-all-habits-btn">
-                <i class="delete-all-icon fa-solid fa-trash"></i> Delete All</button>
-                <button id="add-habit"><i class="fa-solid fa-plus"></i> New Habit</button>
+              <h2>Habits</h2>
+              <div class="btn-wrapper">
+                <button class="delete-all-habits-btn" id="delete-all-habits-btn">
+                  <i class="delete-all-icon fa-solid fa-trash"></i> Delete All</button>
+                <button id="add-habit"><i class="fa-solid fa-plus"></i> Add Habit</button>
+              </div>
             </div>
-              <ul id="habits">
-                  <!-- Habit items will be added here dynamically with JavaScript -->
-              </ul>
-        
-              <p class="max-message" id="max-message">Too many habits!</p>
+
+            <!-- Habit message -->
+            <p class="max-message" id="max-message">Too many habits!</p>
+
+            <!-- Habit List -->
+            <ul id="habits">
+              <!-- Habit items will be added here dynamically with JavaScript -->
+            </ul>
           </section>
 
           <section id="habit-form" style="display:none;">

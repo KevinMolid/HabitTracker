@@ -178,8 +178,12 @@ main {
   background: #ef7215;
 }
 
-h2 {
-    margin-bottom: 0.75em;
+/* Habits */
+.habit-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
 }
 
 ul {
