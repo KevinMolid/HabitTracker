@@ -1,11 +1,13 @@
+const habitsList = document.getElementById('habits')
+
+// localStorage.clear() // Clear localStorage
+
 // Get items from local storage
 let habitList = JSON.parse(localStorage.getItem('habitList'))
 if (!habitList) {
     localStorage.setItem('habitList', JSON.stringify([]))
     habitList = JSON.parse(localStorage.getItem('habitList'))
 }
-
-console.log(habitList)
 
 
 // ********** CALENDAR **********
@@ -31,18 +33,45 @@ function renderCalendar() {
     let liTag = ""
 
     for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
-        liTag += `<li class="inactive">${lastDateOfLastMonth -i + 1}</li>`
+        liTag += `
+            <li class="inactive">
+                <div class="date-wrapper">${lastDateOfLastMonth -i + 1}</div>
+                <div class="ticks">
+                    <div class="tick tick-1"></div>
+                    <div class="tick tick-2"></div>
+                    <div class="tick tick-3"></div>
+                </div>
+            </li>
+        `
     }
 
     for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
         let isToday = i === date.getDate() && currMonth === new Date().getMonth()
                         && currYear === new Date().getFullYear() ? "active" : ""
 
-        liTag += `<li class="${isToday}">${i}</li>`
+        liTag += `
+        <li class="${isToday}">
+            <div class="date-wrapper">${i}</div>
+            <div class="ticks">
+                <div class="tick tick-1"></div>
+                <div class="tick tick-2"></div>
+                <div class="tick tick-3"></div>
+            </div>
+        </li>
+        `
     }
 
     for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
-        liTag += `<li class="inactive">${i - lastDayOfMonth + 1}</li>`
+        liTag += `
+            <li class="inactive">
+                <div class="date-wrapper">${i - lastDayOfMonth + 1}</div>
+                <div class="ticks">
+                    <div class="tick tick-1"></div>
+                    <div class="tick tick-2"></div>
+                    <div class="tick tick-3"></div>
+                </div>
+            </li>
+        `
     }
 
     currentDate.innerText = `${months[currMonth]}  ${currYear}`
@@ -68,15 +97,27 @@ prevNextIcon.forEach(icon => {
 
 
 // ********** HABITS **********
+// Render habits to screen
 for (habit of habitList){
     console.log(habit)
+    // Create element and render to screen
+    const listItem = document.createElement('li')
+    listItem.classList.add('habit') // Add the habit class for general styling
+    listItem.classList.add(`${habit.color}`) // Add color class for specific styling
+    listItem.innerHTML = `
+        <p>${habit.habitName}</p>
+        <div>
+            <button id="delete-${habit.habitName}" class="delete-btn">Delete</button>
+            <button>Done</button>
+        </div>
+    `
+    habitsList.appendChild(listItem)
 }
 
 // ********** NEW HABITS **********
 
 // Add event listeners to document
 document.addEventListener('DOMContentLoaded', () => {
-    const habitsList = document.getElementById('habits')
     const addHabitButton = document.getElementById('add-habit')
     const habitForm = document.getElementById('habit-form')
     const habitNameInput = document.getElementById('habit-name')
@@ -110,13 +151,14 @@ document.addEventListener('DOMContentLoaded', () => {
             color = 'orange'
         }
 
+        // Create element and render to screen
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
         listItem.classList.add(`${color}`) // Add color class for specific styling
         listItem.innerHTML = `
             <p>${habitName}</p>
             <div>
-                <button class="delete-btn">Delete</button>
+                <button id="delete-${habitName}" class="delete-btn">Delete</button>
                 <button>Done</button>
             </div>
         `
@@ -125,15 +167,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save habit to Local Storage
         habitList.push({
-            habit: `${habitName}`,
-            color: `${color}`
+            habitName: `${habitName}`,
+            color: `${color}`,
+            doneDates: []
         })
         localStorage.setItem('habitList', JSON.stringify(habitList))
     }
 
-    // Show the form when the Add New Habit button is clicked
+    // Show the form when the + New Habit button is clicked
     addHabitButton.addEventListener('click', () => {
-        habitForm.style.display = 'block'
+        if (JSON.parse(localStorage.getItem('habitList')).length < 3){
+            habitForm.style.display = 'block'
+        } else {
+            // Show max habits message
+            let message = document.getElementById('max-message')
+            message.style.display = 'inline'
+            setTimeout(() => {
+                message.style.display = 'none'
+            }, 3000);
+        }
     });
 
     // Handle the form submission
@@ -152,3 +204,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set copyright year
 document.getElementById("current-year").innerText = currYear
+
+// Delete habits
+document.addEventListener('click', function(event){
+    if (event.target.classList.contains('delete-btn')){
+        console.log(event.target)
+    }
+})

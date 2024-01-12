@@ -102,24 +102,57 @@ main {
 .weeks li, 
 .days li {
   display: flex;
-  width: calc(100%/7);
+  width: calc(100% / 7);
   padding: 0;
   justify-content: center;
+  text-align: center;
   border-radius: 0;
   background: none;
 }
 
 .days li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 50px;
   margin-top: 6px;
   position: relative;
   z-index: 1;
   cursor: pointer;
 }
 
-.days li::before {
+.days li .ticks {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+}
+
+.tick {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.tick-1 {
+  background: #e215ef;
+}
+
+.tick-2 {
+  background: #15afef;
+}
+
+.tick-3 {
+  background: #ef7215;
+}
+
+.date-wrapper {
+  position: relative;
+}
+
+.days li .date-wrapper::before {
   content: "";
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   position: absolute;
   border-radius: 50%;
   z-index: -1;
@@ -128,7 +161,7 @@ main {
   transform: translate(-50%, -50%);
 }
 
-.days li:hover::before {
+.days li:hover .date-wrapper::before {
   background: #444;
 }
 
@@ -136,7 +169,7 @@ main {
   color: #999;
 }
 
-.days li.active::before {
+.days li.active .date-wrapper::before {
   background: #ef7215;
 }
 
@@ -199,6 +232,8 @@ ul {
   background: #da6a16;
 }
 
+/* Buttons */
+
 button {
     display: inline-block;
     background: #ef7215;
@@ -212,6 +247,16 @@ button {
 
 button:hover {
     background: #da6a16;
+}
+
+/* Message */
+.max-message {
+  display: none; /* inline */
+  margin-left: 8px;
+  color: #fff;
+  background: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
 }
 
 #habit-form {
@@ -252,4 +297,8 @@ footer {
 .content-wrapper {
   position: relative;
   min-height: 100svh;
+}
+
+.inline {
+  display: inline;
 }
