@@ -212,10 +212,10 @@ document.addEventListener('DOMContentLoaded', () => {
             habitForm.style.display = 'block'
         } else {
             // Show max habits message
-            let message = document.getElementById('max-message')
-            message.style.display = 'inline'
+            let maxMessage = document.getElementById('max-message')
+            maxMessage.style.display = 'inline'
             setTimeout(() => {
-                message.style.display = 'none'
+                maxMessage.style.display = 'none'
             }, 3000);
         }
     });
@@ -223,13 +223,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle the form submission
     habitForm.addEventListener('submit', (event) => {
         event.preventDefault()
-        const habitName = habitNameInput.value.trim();
-        if (habitName) {
+        const habitName = habitNameInput.value.trim().toLowerCase();
+
+        // Check if habit exists
+        const habitNames = habitList.map(function(habit){
+            return habit.habitName
+        })
+        if (!habitNames.includes(habitName)){
             addHabit(habitName)
             habitNameInput.value = '' // Reset input field
             habitForm.style.display = 'none' // Hide the form again
         } else {
-            alert('Please enter a habit name.')
+            // Show exists message
+            let existsMessage = document.getElementById('exists-message')
+            existsMessage.style.display = 'inline'
+            setTimeout(() => {
+                existsMessage.style.display = 'none'
+            }, 3000);
         }
     });
 });

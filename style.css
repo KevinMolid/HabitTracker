@@ -261,7 +261,8 @@ button:hover {
 }
 
 /* Message */
-.max-message {
+.max-message,
+.exists-message {
   display: none; /* inline */
   margin-left: 8px;
   color: #fff;
