@@ -4,6 +4,12 @@ const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
 let habitList = []
 
 // ********** FUNCTIONS **********
+// Set Local Storage
+function setLocalStorage(){
+    localStorage.setItem('habitList', JSON.stringify(habitList))
+}
+
+
 // Clear localStorage
 function clearLocalStorage(){
     localStorage.clear() 
@@ -35,7 +41,7 @@ function renderHabits(){
             <p>${habit.habitName}</p>
             <div>
                 <button id="delete-${habit.habitName}" class="delete-btn">Delete</button>
-                <button>Done</button>
+                <button id="done-${habit.habitName}" class="done-btn">Done</button>
             </div>
         `
         habitsList.appendChild(listItem)
@@ -55,6 +61,7 @@ deleteAllHabitsBtn.addEventListener('click', function(){
     clearHabitsList()
     // Set Local storage to empty list   
     fetchLocalStorage() 
+    renderCalendar()
 })
 
 
@@ -83,13 +90,53 @@ function renderCalendar() {
     let liTag = ""
 
     for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
+        // Get the date
+        const day = lastDateOfLastMonth -i + 1
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const checkdate = `${day}${month}${year}`
+
+        // Determine if habits are done or not
+        // pink habit:
+        let pinkTick = ''
+        for (habit of habitList){
+            if (habit.color === 'pink'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    pinkTick = 'tick-pink'
+                }
+            }
+        }
+
+        // Blue habit:
+        let blueTick = ''
+        for (habit of habitList){
+            if (habit.color === 'blue'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    blueTick = 'tick-blue'
+                }
+            }
+        }
+
+        // Orange habit:
+        let orangeTick = ''
+        for (habit of habitList){
+            if (habit.color === 'orange'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    orangeTick = 'tick-orange'
+                }
+            }
+        }
+
         liTag += `
             <li class="inactive">
-                <div class="date-wrapper">${lastDateOfLastMonth -i + 1}</div>
+                <div class="date-wrapper">${day}</div>
                 <div class="ticks">
-                    <div class="tick tick-1"></div>
-                    <div class="tick tick-2"></div>
-                    <div class="tick tick-3"></div>
+                    <div class="tick ${pinkTick}"></div>
+                    <div class="tick ${blueTick}"></div>
+                    <div class="tick ${orangeTick}"></div>
                 </div>
             </li>
         `
@@ -99,13 +146,53 @@ function renderCalendar() {
         let isToday = i === date.getDate() && currMonth === new Date().getMonth()
                         && currYear === new Date().getFullYear() ? "active" : ""
 
+        // Get the date
+        const day = i
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const checkdate = `${day}${month}${year}`
+
+        // Determine if habits are done or not
+        // pink habit:
+        let pinkTick = ''
+        for (habit of habitList){
+            if (habit.color === 'pink'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    pinkTick = 'tick-pink'
+                }
+            }
+        }
+
+        // Blue habit:
+        let blueTick = ''
+        for (habit of habitList){
+            if (habit.color === 'blue'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    blueTick = 'tick-blue'
+                }
+            }
+        }
+
+        // Orange habit:
+        let orangeTick = ''
+        for (habit of habitList){
+            if (habit.color === 'orange'){
+                // If date is in habit.doneDates, show pink tick
+                if (habit.doneDates.includes(checkdate)){
+                    orangeTick = 'tick-orange'
+                }
+            }
+        }
+
         liTag += `
         <li class="${isToday}">
             <div class="date-wrapper">${i}</div>
             <div class="ticks">
-                <div class="tick tick-1"></div>
-                <div class="tick tick-2"></div>
-                <div class="tick tick-3"></div>
+                <div class="tick ${pinkTick}"></div>
+                <div class="tick ${blueTick}"></div>
+                <div class="tick ${orangeTick}"></div>
             </div>
         </li>
         `
@@ -116,9 +203,9 @@ function renderCalendar() {
             <li class="inactive">
                 <div class="date-wrapper">${i - lastDayOfMonth + 1}</div>
                 <div class="ticks">
-                    <div class="tick tick-1"></div>
-                    <div class="tick tick-2"></div>
-                    <div class="tick tick-3"></div>
+                    <div class="tick"></div>
+                    <div class="tick"></div>
+                    <div class="tick"></div>
                 </div>
             </li>
         `
@@ -191,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>${habitName}</p>
             <div>
                 <button id="delete-${habitName}" class="delete-btn">Delete</button>
-                <button>Done</button>
+                <button id="done-${habitName}" class="done-btn">Done</button>
             </div>
         `
         habitsList.appendChild(listItem)
@@ -203,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             color: `${color}`,
             doneDates: []
         })
-        localStorage.setItem('habitList', JSON.stringify(habitList))
+        setLocalStorage()
     }
 
     // Show the form when the + New Habit button is clicked
@@ -251,5 +338,31 @@ document.getElementById("current-year").innerText = currYear
 document.addEventListener('click', function(event){
     if (event.target.classList.contains('delete-btn')){
         console.log(event.target)
+    }
+})
+
+// Mark habit as done
+document.addEventListener('click', function(event){
+    if (event.target.classList.contains('done-btn')){
+        // Set the date
+        const newDate = new Date()
+        const day = newDate.getDate()
+        const month = months[newDate.getMonth()]
+        const year = newDate.getFullYear()
+        const date = `${day}${month}${year}`
+
+        // Add date to the habit objects doneDates array
+        const habitName = event.target.id.slice(5) // Get habit name
+
+        for (habit of habitList){
+            if (habit.habitName === habitName){
+                // If date doesn't exis, push date to doneDates
+                if (habit.doneDates.slice(-1) != date){
+                    habit.doneDates.push(date)
+                    setLocalStorage()
+                    renderCalendar()
+                }
+            }
+        }
     }
 })

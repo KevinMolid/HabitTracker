@@ -136,17 +136,18 @@ main {
   width: 7px;
   height: 7px;
   border-radius: 50%;
+  background: #444444;
 }
 
-.tick-1 {
+.tick-pink {
   background: #e215ef;
 }
 
-.tick-2 {
+.tick-blue {
   background: #15afef;
 }
 
-.tick-3 {
+.tick-orange {
   background: #ef7215;
 }
 
