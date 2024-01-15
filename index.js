@@ -79,10 +79,12 @@ renderHabits()
 // Delete All button
 deleteAllHabitsBtn.addEventListener('click', function(){
     // Show warning modal
-    warningModal.style.display = 'flex'
+    if (habitList.length != 0){
+        warningModal.style.display = 'flex'
+    }
 })
 
-// Delete All button
+// Close warning module button
 closeWarningModalBtn.addEventListener('click', function(){
     // Hide warning modal
     warningModal.style.display = 'none'
