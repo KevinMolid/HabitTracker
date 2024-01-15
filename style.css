@@ -207,13 +207,15 @@ ul {
 }
 
 .habit .delete-btn,
-.delete-all-habits-btn {
+.delete-all-habits-btn,
+.close-warning-modal-btn {
   color: #999;
   background: #333;
 }
 
 .habit .delete-btn:hover,
-.delete-all-habits-btn:hover {
+.delete-all-habits-btn:hover,
+.close-warning-modal-btn:hover {
   color: #aaa;
   background: #393939;
 }
@@ -259,6 +261,13 @@ button {
 
 button:hover {
     background: #da6a16;
+}
+
+.close-warning-modal-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
 }
 
 /* Message */
@@ -314,12 +323,13 @@ footer {
 
 /* Warning modal */
 .warning-modal {
+  position: relative;
   display: none; /* flex */
   color: #FFFFFF;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 2em 1em 1em;
+  padding: 1em 1em 1em;
   background: #222;
   gap: 0.5em;
   border-radius: 5px;
@@ -335,6 +345,14 @@ footer {
   color: #AAAAAA;
 }
 
+.dark-grey {
+  color: #444444;
+}
+
 .inline {
   display: inline;
+}
+
+.large-icon {
+  font-size: 2rem;
 }

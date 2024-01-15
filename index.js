@@ -2,6 +2,7 @@
 const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
 const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
 const warningModal = document.getElementById('warning-modal')
+const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
 const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
 let habitList = []
 
@@ -79,6 +80,12 @@ renderHabits()
 deleteAllHabitsBtn.addEventListener('click', function(){
     // Show warning modal
     warningModal.style.display = 'flex'
+})
+
+// Delete All button
+closeWarningModalBtn.addEventListener('click', function(){
+    // Hide warning modal
+    warningModal.style.display = 'none'
 })
 
 // Confirm delete all
