@@ -77,12 +77,22 @@
             <!-- Habit message -->
             <p class="max-message" id="max-message">Too many habits!</p>
 
+            <!-- Warning Modal -->
+            <div class="warning-modal" id="warning-modal">
+              <p class="bold">Do you want to delete all habits?</p>
+              <p class="grey">All progress will be lost!</p>
+              <button class="confirm-delete-all-btn" id="confirm-delete-all-btn">
+                <i class="delete-all-icon fa-solid fa-trash"></i> Delete All Habits
+              </button>
+            </div>
+
             <!-- Habit List -->
             <ul id="habits">
               <!-- Habit items will be added here dynamically with JavaScript -->
             </ul>
           </section>
 
+          <!-- Add Habit form -->
           <section id="habit-form" style="display:none;">
               <h2>Add Habit</h2>
               <form>
@@ -100,6 +110,7 @@
                   <p class="exists-message" id="exists-message">Habit exists!</p>
               </form>
           </section>
+
       </main>
 
       <footer>

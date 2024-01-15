@@ -1,6 +1,8 @@
 // Variables
 const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
 const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
+const warningModal = document.getElementById('warning-modal')
+const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
 let habitList = []
 
 // ********** FUNCTIONS **********
@@ -50,25 +52,6 @@ function renderHabits(){
     }
 }
 
-
-// Run app
-// Get items from local storage
-fetchLocalStorage()
-// Render habits to screen
-renderHabits()
-
-// Event listeners
-deleteAllHabitsBtn.addEventListener('click', function(){
-    clearLocalStorage()
-    clearHabitsList()
-    // Set Local storage to empty list   
-    fetchLocalStorage() 
-    renderCalendar()
-})
-
-
-
-
 // ********** CALENDAR **********
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
@@ -80,6 +63,35 @@ currYear = date.getFullYear(),
 currMonth = date.getMonth()
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+
+// Run app
+// Get items from local storage
+fetchLocalStorage()
+// Render calendar to screen
+renderCalendar()
+// Render habits to screen
+renderHabits()
+
+// ********** EVENT LISTENERS **********
+
+// Delete All button
+deleteAllHabitsBtn.addEventListener('click', function(){
+    // Show warning modal
+    warningModal.style.display = 'flex'
+})
+
+// Confirm delete all
+confirmDeleteAllBtn.addEventListener('click', function(){
+    // Hide warning modal
+    warningModal.style.display = 'none'
+    // Clear local storage and habits list
+    clearLocalStorage()
+    clearHabitsList()
+    // Set Local storage to empty list   
+    fetchLocalStorage() 
+    renderCalendar()
+})
 
 
 // Function to render the calendar
@@ -216,8 +228,6 @@ function renderCalendar() {
     currentDate.innerText = `${months[currMonth]}  ${currYear}`
     daysTag.innerHTML = liTag
 }
-
-renderCalendar()
 
 // Previous and Next calendar icons
 prevNextIcon.forEach(icon => {

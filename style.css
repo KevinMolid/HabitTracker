@@ -312,6 +312,29 @@ footer {
   min-height: 100svh;
 }
 
+/* Warning modal */
+.warning-modal {
+  display: none; /* flex */
+  color: #FFFFFF;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2em 1em 1em;
+  background: #222;
+  gap: 0.5em;
+  border-radius: 5px;
+  margin-bottom: 1em;
+}
+
+/* */
+.bold {
+  font-weight: 600;
+}
+
+.grey {
+  color: #AAAAAA;
+}
+
 .inline {
   display: inline;
 }
