@@ -32,6 +32,8 @@ function fetchLocalStorage(){
 // ********** HABITS **********
 // Render habits to screen
 function renderHabits(){
+    // Reset habits list to empty element
+    habitsList.innerHTML = ''
     for (habit of habitList){
         // Create element and render to screen
         const listItem = document.createElement('li')
@@ -337,7 +339,18 @@ document.getElementById("current-year").innerText = currYear
 // Delete habits
 document.addEventListener('click', function(event){
     if (event.target.classList.contains('delete-btn')){
-        console.log(event.target)
+        // find habit name from id
+        const habitName = event.target.id.slice(7)
+        // Make list of habit names
+        const habitNamesArr = habitList.map(habit => habit.habitName)
+        // Find index of habit name
+        const index = habitNamesArr.indexOf(habitName)
+        // Delete habit from habit list
+        habitList.splice(index, 1)
+        // Update local storage and re-render screen
+        setLocalStorage()
+        renderCalendar()
+        renderHabits()
     }
 })
 
