@@ -42,13 +42,7 @@ function renderHabits(){
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
         listItem.classList.add(`${habit.color}`) // Add color class for specific styling
-        listItem.innerHTML = `
-            <p>${habit.habitName}</p>
-            <div>
-                <button id="delete-${habit.habitName}" class="delete-btn">Delete</button>
-                <button id="done-${habit.habitName}" class="done-btn">Done</button>
-            </div>
-        `
+        listItem.innerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
         habitsList.appendChild(listItem)
     }
 }
@@ -261,9 +255,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const addHabitButton = document.getElementById('add-habit')
     const habitForm = document.getElementById('habit-form')
     const habitNameInput = document.getElementById('habit-name')
+    const habitFrequencyInput = document.getElementById('habit-frequency')
+    const habitTrackingInput = document.getElementById('habit-tracking')
+    const habitDetailsInput = document.getElementById('habit-details')
 
     // Function to add a habit to the list
-    function addHabit(habitName) {
+    function addHabit(habitName, frequency, tracking, details) {
         let colorList = [0, 0, 0] // pink, blue, orange
 
         // Check for existing habits and add to color list
@@ -295,19 +292,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
         listItem.classList.add(`${color}`) // Add color class for specific styling
-        listItem.innerHTML = `
-            <p>${habitName}</p>
-            <div>
-                <button id="delete-${habitName}" class="delete-btn">Delete</button>
-                <button id="done-${habitName}" class="done-btn">Done</button>
-            </div>
-        `
+        listItem.innerHTML = getHabitHTML(habitName, frequency, tracking, details)
         habitsList.appendChild(listItem)
 
 
         // Save habit to Local Storage
         habitList.push({
             habitName: `${habitName}`,
+            frequency: `${frequency}`,
+            tracking: `${tracking}`,
+            details: `${details}`,
             color: `${color}`,
             doneDates: []
         })
@@ -331,15 +325,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle the form submission
     habitForm.addEventListener('submit', (event) => {
         event.preventDefault()
-        const habitName = habitNameInput.value.trim().toLowerCase();
+        const habitName = habitNameInput.value.trim().toLowerCase()
+        const frequency = habitFrequencyInput.value.trim().toLowerCase()
+        const tracking = habitTrackingInput.value.trim().toLowerCase()
+        const details = habitDetailsInput.value
 
         // Check if habit exists
         const habitNames = habitList.map(function(habit){
             return habit.habitName
         })
         if (!habitNames.includes(habitName)){
-            addHabit(habitName)
+            addHabit(habitName, frequency, tracking, details)
             habitNameInput.value = '' // Reset input field
+            habitDetailsInput.value = '' // Reset text area
             habitForm.style.display = 'none' // Hide the form again
         } else {
             // Show exists message
@@ -373,8 +371,10 @@ document.addEventListener('click', function(event){
     }
 })
 
-// Mark habit as done
+// Document event listeners
 document.addEventListener('click', function(event){
+
+    // Mark habit as done
     if (event.target.classList.contains('done-btn')){
         // Set the date
         const newDate = new Date()
@@ -397,4 +397,47 @@ document.addEventListener('click', function(event){
             }
         }
     }
+
+    // Expand habit details when clicking on the habit header
+    else if (event.target.classList.contains('habit-header')){
+        // get habit name
+        const habitName = event.target.id.slice(7)
+        // show details
+        const habitDetails = document.getElementById(`details-${habitName}`)
+        habitDetails.classList.toggle('grid')
+    }
+
 })
+
+
+/* Console log the habit list */
+console.log(habitList)
+
+
+/* Function to get habit element HTML */
+function getHabitHTML(habitName, frequency, tracking, details){
+    return `
+        <div class="habit-header" id="header-${habitName}">
+            <h3>${habitName}</h3>
+            <button id="done-${habitName}" class="done-btn">Done</button>
+        </div>
+        <div class="habit-details" id="details-${habitName}">
+            <div>
+                <h4>Frequency</h4>
+                <p class="habit-frequency">${frequency}</p>
+            </div>
+            <div>
+                <h4>Tracking</h4>
+                <p class="habit-tracking">${tracking}</p>
+            </div>
+            <div class="span-2">
+                <h4>Details</h4>
+                <p>${details}</p>
+            </div>
+            <div class="margin-top span-2">
+                <button id="edit-${habitName}" class="edit-btn">Edit</button>
+                <button id="delete-${habitName}" class="delete-btn">Delete</button>
+            </div>
+        </div>
+    `
+}
