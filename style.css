@@ -215,6 +215,15 @@ ul {
   background: #292929;
 }
 
+.habit-header input {
+  width: 100px;
+  padding: 10px;
+  color: #FFFFFF;
+  background: #333;
+  border: none;
+  border-radius: 5px;
+}
+
 .habit h3 {
   font-size: 1.2rem;
   font-weight: 400;

@@ -303,7 +303,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tracking: `${tracking}`,
             details: `${details}`,
             color: `${color}`,
-            doneDates: []
+            doneDates: [],
+            numbers: []
         })
         setLocalStorage()
     }
@@ -382,14 +383,24 @@ document.addEventListener('click', function(event){
         const month = months[newDate.getMonth()]
         const year = newDate.getFullYear()
         const date = `${day}${month}${year}`
-
+ 
         // Add date to the habit objects doneDates array
         const habitName = event.target.id.slice(5) // Get habit name
 
+        // Get the numberInput element if it exists
+        const numberInput = document.getElementById(`number-input-${habitName}`)
+
         for (habit of habitList){
             if (habit.habitName === habitName){
-                // If date doesn't exis, push date to doneDates
+
+                // If date doesn't exist, push date to doneDates
                 if (habit.doneDates.slice(-1) != date){
+                    // If tracking is number
+                    if (numberInput){
+                        habit.numbers.push(numberInput.value)
+                        numberInput.value = ''
+                    }
+                    // Push date and render
                     habit.doneDates.push(date)
                     setLocalStorage()
                     renderCalendar()
@@ -398,10 +409,16 @@ document.addEventListener('click', function(event){
         }
     }
 
-    // Expand habit details when clicking on the habit header
+    // Expand habit details when clicking on the habit header or habit name
     else if (event.target.classList.contains('habit-header')){
         // get habit name
         const habitName = event.target.id.slice(7)
+        // show details
+        const habitDetails = document.getElementById(`details-${habitName}`)
+        habitDetails.classList.toggle('grid')
+    } else if (event.target.classList.contains('habit-name')){
+        // get habit name
+        const habitName = event.target.id.slice(11)
         // show details
         const habitDetails = document.getElementById(`details-${habitName}`)
         habitDetails.classList.toggle('grid')
@@ -416,10 +433,22 @@ console.log(habitList)
 
 /* Function to get habit element HTML */
 function getHabitHTML(habitName, frequency, tracking, details){
+    // Adding tracking mode elements
+    numberInput = ''
+
+    if (tracking === 'number'){
+        numberInput = `
+            <input id="number-input-${habitName}" type="number" placeholder="Number">
+        `
+    }
+
     return `
         <div class="habit-header" id="header-${habitName}">
-            <h3>${habitName}</h3>
-            <button id="done-${habitName}" class="done-btn">Done</button>
+            <h3 class="habit-name" id="habit-name-${habitName}">${habitName}</h3>
+            <div>
+                ${numberInput}
+                <button id="done-${habitName}" class="done-btn">Done</button>
+            </div>
         </div>
         <div class="habit-details" id="details-${habitName}">
             <div>
