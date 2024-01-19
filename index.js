@@ -148,7 +148,7 @@ function renderCalendar() {
         }
 
         liTag += `
-            <li class="inactive">
+            <li class="date-li inactive">
                 <div class="date-wrapper">${day}</div>
                 <div class="ticks">
                     <div class="tick ${pinkTick}"></div>
@@ -204,7 +204,7 @@ function renderCalendar() {
         }
 
         liTag += `
-        <li class="${isToday}">
+        <li class="date-li ${isToday}">
             <div class="date-wrapper">${i}</div>
             <div class="ticks">
                 <div class="tick ${pinkTick}"></div>
@@ -217,7 +217,7 @@ function renderCalendar() {
 
     for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
         liTag += `
-            <li class="inactive">
+            <li class="date-li inactive">
                 <div class="date-wrapper">${i - lastDayOfMonth + 1}</div>
                 <div class="ticks">
                     <div class="tick"></div>
@@ -374,6 +374,8 @@ document.addEventListener('click', function(event){
 
 // Document event listeners
 document.addEventListener('click', function(event){
+    // Calendar click events
+    console.log(event.target)
 
     // Mark habit as done
     if (event.target.classList.contains('done-btn')){
