@@ -131,6 +131,7 @@ main {
   display: flex;
   justify-content: center;
   gap: 4px;
+  pointer-events: none;
 }
 
 .tick {
@@ -138,6 +139,7 @@ main {
   height: 7px;
   border-radius: 50%;
   background: #444444;
+  pointer-events: none;
 }
 
 .tick-pink {
@@ -154,6 +156,7 @@ main {
 
 .date-wrapper {
   position: relative;
+  pointer-events: none;
 }
 
 .days li .date-wrapper::before {
@@ -182,6 +185,7 @@ main {
 
 /* Calendar modal */
 .calendar-modal {
+  display: none; /* block */
   width: 100%;
   height: 100%;
   position: absolute;
@@ -193,19 +197,20 @@ main {
 }
 
 .calendar-modal header {
-  padding: 1em;
+  padding: 2em 0 1em;
   text-align: center;
   background: #222;
   border-radius: 5px 5px 0 0;
   cursor: pointer;
 }
 
-.calendar-modal header:hover {
-  background: #292929;
+.calendar-modal header h2 {
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 
-.calendar-modal main {
-
+.calendar-modal header:hover {
+  background: #292929;
 }
 
 /* Habits */

@@ -1,4 +1,6 @@
 // Variables
+const calendarModal = document.getElementById('calendar-modal')
+
 const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
 const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
 const warningModal = document.getElementById('warning-modal')
@@ -58,6 +60,8 @@ currYear = date.getFullYear(),
 currMonth = date.getMonth()
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 
 // Run app
@@ -112,6 +116,8 @@ function renderCalendar() {
         const month = months[new Date(currYear, currMonth, 1).getMonth()]
         const year = new Date(currYear, currMonth, 1).getFullYear()
         const checkdate = `${day}${month}${year}`
+        const active = 'inactive'
+        const id = `p${day}`
 
         // Determine if habits are done or not
         // pink habit:
@@ -147,20 +153,11 @@ function renderCalendar() {
             }
         }
 
-        liTag += `
-            <li class="date-li inactive">
-                <div class="date-wrapper">${day}</div>
-                <div class="ticks">
-                    <div class="tick ${pinkTick}"></div>
-                    <div class="tick ${blueTick}"></div>
-                    <div class="tick ${orangeTick}"></div>
-                </div>
-            </li>
-        `
+        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
     }
 
     for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
-        let isToday = i === date.getDate() && currMonth === new Date().getMonth()
+        let active = i === date.getDate() && currMonth === new Date().getMonth()
                         && currYear === new Date().getFullYear() ? "active" : ""
 
         // Get the date
@@ -168,6 +165,7 @@ function renderCalendar() {
         const month = months[new Date(currYear, currMonth, 1).getMonth()]
         const year = new Date(currYear, currMonth, 1).getFullYear()
         const checkdate = `${day}${month}${year}`
+        const id = `c${day}`
 
         // Determine if habits are done or not
         // pink habit:
@@ -203,33 +201,35 @@ function renderCalendar() {
             }
         }
 
-        liTag += `
-        <li class="date-li ${isToday}">
-            <div class="date-wrapper">${i}</div>
+        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
+    }
+
+    for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
+        const day = i - lastDayOfMonth + 1
+        const id = `n${day}`
+        const active = 'inactive'
+        const pinkTick = ''
+        const blueTick = ''
+        const orangeTick = ''
+        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
+    }
+
+    currentDate.innerText = `${months[currMonth]}  ${currYear}`
+    daysTag.innerHTML = liTag
+}
+
+// Function to get HTML for calendar list item
+function getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick){
+    return `
+        <li id="${id}" class="date-li ${active}">
+            <div class="date-wrapper">${day}</div>
             <div class="ticks">
                 <div class="tick ${pinkTick}"></div>
                 <div class="tick ${blueTick}"></div>
                 <div class="tick ${orangeTick}"></div>
             </div>
         </li>
-        `
-    }
-
-    for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
-        liTag += `
-            <li class="date-li inactive">
-                <div class="date-wrapper">${i - lastDayOfMonth + 1}</div>
-                <div class="ticks">
-                    <div class="tick"></div>
-                    <div class="tick"></div>
-                    <div class="tick"></div>
-                </div>
-            </li>
-        `
-    }
-
-    currentDate.innerText = `${months[currMonth]}  ${currYear}`
-    daysTag.innerHTML = liTag
+    `
 }
 
 // Previous and Next calendar icons
@@ -246,6 +246,18 @@ prevNextIcon.forEach(icon => {
         renderCalendar()
     })
 })
+
+// Function to render calendar modal
+function renderCalendarModal(date){
+    const calendarModalHeaderDate = document.getElementById('calendar-modal-header-date')
+    const calendarModalHeaderDay = document.getElementById('calendar-modal-header-day')
+    const day = days[date.getDay()]
+    const dt = date.getDate()
+    const mnt = fullMonths[date.getMonth()]
+    const yr = date.getFullYear()
+    calendarModalHeaderDay.innerText = day
+    calendarModalHeaderDate.innerText = `${mnt} ${dt}, ${yr}`
+}
 
 
 // ********** NEW HABITS **********
@@ -375,10 +387,24 @@ document.addEventListener('click', function(event){
 // Document event listeners
 document.addEventListener('click', function(event){
     // Calendar click events
-    console.log(event.target)
+    // Show calendar modal when clicking on a day
+    if (event.target.classList.contains('date-li')){
+        // Get date from calendar list item id
+        const dayToShow = event.target.id.slice(1)
+        const monthToShow = months.indexOf(currentDate.innerText.slice(0, 3))
+        const yearToShow = currentDate.innerText.slice(4)
+        const dateToShow = new Date(yearToShow, monthToShow, dayToShow)
+        renderCalendarModal(dateToShow)
+        calendarModal.style.display = 'block'
+    }
+
+    // Hide calendar modal when clicking on the calendar modal header
+    else if (event.target.classList.contains('calendar-modal-header')){
+        calendarModal.style.display = 'none'
+    }
 
     // Mark habit as done
-    if (event.target.classList.contains('done-btn')){
+    else if (event.target.classList.contains('done-btn')){
         // Set the date
         const newDate = new Date()
         const day = newDate.getDate()
