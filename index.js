@@ -1,4 +1,12 @@
 // Variables
+let habitList = []
+
+
+/* == UI - Elements == */
+
+const viewLoggedOut = document.getElementById("logged-out-view")
+const viewLoggedIn = document.getElementById("logged-in-view")
+
 const calendarModal = document.getElementById('calendar-modal')
 
 const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
@@ -6,7 +14,7 @@ const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
 const warningModal = document.getElementById('warning-modal')
 const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
 const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
-let habitList = []
+
 
 // ********** FUNCTIONS **********
 // Set Local Storage
@@ -497,4 +505,30 @@ function getHabitHTML(habitName, frequency, tracking, details){
             </div>
         </div>
     `
+}
+
+
+/* === Main Code === */
+
+showLoggedOutView()
+
+
+/* == Functions - UI Functions == */
+
+function showLoggedOutView() {
+    hideElement(viewLoggedIn)
+    showElement(viewLoggedOut)
+}
+
+function showLoggedInView() {
+    hideElement(viewLoggedOut)
+    showElement(viewLoggedIn)
+}
+
+function showElement(element) {
+    element.style.display = "flex"
+}
+
+function hideElement(element) {
+    element.style.display = "none"
 }
