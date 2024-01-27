@@ -17,6 +17,7 @@ To add habits, click the "+ Add Habit" button, and a form pops up.
 ![image](https://github.com/KevinMolid/HabitTracker/assets/97530324/4729205d-52fd-486c-bacd-06d330727782)
 
 Habit Name: Enter a name for the habit. Max 10 characters.
+
 Frequency: How often the habit should be done.
 Tracking: Set the method for tracking:
 * Binary: Simply mark the habit as done (Did you read?)
