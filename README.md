@@ -33,3 +33,6 @@ Details: Add a description of when, where, what or how to perform the habit.
 * A bug where the date is set to the first of the current month when switching to previous month.
 * The detailed view of each day is a work in progress and does not show numbers or timestamps for habits.
 * A light-mode version of the app is being worked on.
+
+## Like this project?
+If you are feeling generous, buy me a coffee ☕ - https://www.buymeacoffee.com/kevinmolid
