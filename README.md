@@ -19,8 +19,8 @@ To add a habit, simply click on the "+ Add Habit" button, and a form pops up.
 Habit Name: Enter a name for the habit. Max 10 characters.
 
 ## Known issues (Work in progress)
-Authentication and cross-device access to data.
-Menu button not functional.
-A bug where the date is set to the first of the current month when switching to previous month.
-The detailed view of each day is a work in progress and does not show numbers or timestamps for habits.
-A light-mode version of the app is being worked on.
+* Authentication and cross-device access to data.
+* Menu button not functional.
+* A bug where the date is set to the first of the current month when switching to previous month.
+* The detailed view of each day is a work in progress and does not show numbers or timestamps for habits.
+* A light-mode version of the app is being worked on.
