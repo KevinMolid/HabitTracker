@@ -19,10 +19,13 @@ To add habits, click the "+ Add Habit" button, and a form pops up.
 Habit Name: Enter a name for the habit. Max 10 characters.
 
 Frequency: How often the habit should be done.
+
 Tracking: Set the method for tracking:
 * Binary: Simply mark the habit as done (Did you read?)
 * Number: Track a number related to the habit (How many pages did you read?)
 * Time: Track the timestamp when the habit was done (When did you read?)
+
+Details: Add a description of when, where, what or how to perform the habit.
 
 ## Known issues (Work in progress)
 * Authentication and cross-device access to data.
