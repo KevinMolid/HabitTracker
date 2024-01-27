@@ -8,4 +8,4 @@ It lets you track how many pages you read, your sleep schedule, exercise, medita
 Currently, the app utilizes local storage to save habit data.
 I am working on implementing authentication with Firebase, so that you can have access to your habits on multiple devices.
 
-The app is hosted at: https://km-habitual.netlify.app/
+Hosted at: https://km-habitual.netlify.app/
