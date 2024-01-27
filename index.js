@@ -510,7 +510,7 @@ function getHabitHTML(habitName, frequency, tracking, details){
 
 /* === Main Code === */
 
-showLoggedOutView()
+showLoggedInView()
 
 
 /* == Functions - UI Functions == */
