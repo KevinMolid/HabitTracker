@@ -2,7 +2,7 @@
 
 ## Are you keeping track of your new year resolutions? 
 
-habitual is a Habit tracker web application made with HTML, CSS and Javascript, designed to track your habits.
+habitual is a web application made with HTML, CSS and Javascript, designed to track your habits.
 It lets you track habits like how many pages you read, your sleep schedule, exercise, meditation or whatever you want, and shows them on a calendar.
 
 Currently, the app utilizes local storage to save habit data.
