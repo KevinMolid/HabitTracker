@@ -10,6 +10,8 @@ Currently, the app utilizes local storage to save habit data.
 I am working on implementing authentication with Firebase, so that you can have access to your habits on multiple devices.
 
 ## Adding and removing habits
+![image](https://github.com/KevinMolid/HabitTracker/assets/97530324/3e50df66-1888-4347-bdbc-b26844d3c3ef)
+
 To add a habit, simply click on the "+ Add Habit" button, and a form pops up.
 
 ![image](https://github.com/KevinMolid/HabitTracker/assets/97530324/4729205d-52fd-486c-bacd-06d330727782)
