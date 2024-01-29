@@ -85,7 +85,7 @@ function fetchLocalStorage(){
 function renderHabits(){
     // Reset habits list to empty element
     habitsList.innerHTML = ''
-    for (habit of habitList){
+    for (let habit of habitList){
         // Create element and render to screen
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
