@@ -28,45 +28,44 @@
   </head>
 
   <body>
-
-    <div class="content-wrapper">
-      <header class="main-header">
-        <div class="logo">
-          <img class="logo-img" src="images/LogoNoBG.png">
-          <h1 class="title">habitual</h1>
+    <section id="logged-out-view">
+      <div class="container">
+        <h1 class="app-title">Sign in</h1>
+        
+        <div class="provider-buttons">
+            <button id="sign-in-with-google-btn" class="provider-btn">
+              <img src="images/google.png" class="google-btn-logo">
+                Sign in with Google
+            </button>
         </div>
-        <nav>
-          <button class="menu-icon">
-            <i class="fa-solid fa-bars"></i>
-          </button>
-          <button id="sign-out-btn" class="icon-btn menu-icon">
-            <i class="fa-solid fa-right-from-bracket"></i>
-          </button>
-        </nav>
-      </header>
-
-      <section id="logged-out-view">
-        <div class="container">
-          <h1 class="app-title">Sign in</h1>
-          
-          <div class="provider-buttons">
-              <button id="sign-in-with-google-btn" class="provider-btn">
-                <img src="images/google.png" class="google-btn-logo">
-                  Sign in with Google
-              </button>
-          </div>
-          
-          <div class="auth-fields-and-buttons">
-              <input class="auth-input margin-bottom" id="email-input" type="email" placeholder="Email">
-              <input class="auth-input" id="password-input" type="password" placeholder="Password">
-              
-              <button id="sign-in-btn" class="full-width primary-btn">Sign in</button>
-              <button id="create-account-btn" class="full-width secondary-btn">Create Account</button>
-          </div>
+        
+        <div class="auth-fields-and-buttons">
+            <input class="auth-input margin-bottom" id="email-input" type="email" placeholder="Email">
+            <input class="auth-input" id="password-input" type="password" placeholder="Password">
+            
+            <button id="sign-in-btn" class="full-width primary-btn">Sign in</button>
+            <button id="create-account-btn" class="full-width secondary-btn">Create Account</button>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section id="logged-in-view">
+    <section id="logged-in-view">
+      <div class="content-wrapper">
+        <header class="main-header">
+          <div class="logo">
+            <img class="logo-img" src="images/LogoNoBG.png">
+            <h1 class="title">habitual</h1>
+          </div>
+          <nav>
+            <button class="menu-icon">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <button id="sign-out-btn" class="icon-btn menu-icon">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </button>
+          </nav>
+        </header>
+  
         <main>
           <section>
             <div class="user-section">
@@ -188,12 +187,14 @@
           </section>
 
         </main>
-      </section>
 
-      <footer>
-          <p>&copy; <span id="current-year">2000</span> Kevin Molid</p>
-      </footer>
-    </div>
+  
+        <footer>
+            <p>&copy; <span id="current-year">2000</span> Kevin Molid</p>
+        </footer>
+      </div>
+    </section>
+    
 
     <script src="index.js" type="module" defer></script>
   </body>
