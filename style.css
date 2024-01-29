@@ -44,8 +44,23 @@ body {
     font-size: 1.5em; /* 24 px */
 }
 
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
 .menu-icon {
+  padding: 4px;
+  color: #999;
+  background-color: #333;
   font-size: 1.6rem;
+}
+
+.menu-icon:hover {
+  background-color: #333;
+  color: white;
 }
 
 /* Logged out view */
@@ -77,6 +92,10 @@ body {
 }
 
 .provider-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
   margin-bottom: 2em;
 }
 
@@ -96,6 +115,10 @@ body {
 .provider-btn:hover {
   color: #aaa;
   background: #393939;
+}
+
+.google-btn-logo {
+  width: 1.375em;
 }
 
 

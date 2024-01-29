@@ -1,3 +1,32 @@
+// Imports
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics.js"
+import { getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    GoogleAuthProvider,
+    signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
+
+/* === Firebase Setup === */
+const firebaseConfig = {
+    apiKey: "AIzaSyCpQ81liexQS4EuiSJTXlqlPs5xlMcfQc4",
+    authDomain: "habitual-102f5.firebaseapp.com",
+    projectId: "habitual-102f5",
+    storageBucket: "habitual-102f5.appspot.com",
+    messagingSenderId: "364027472490",
+    appId: "1:364027472490:web:5304f78feaca867f4fb813",
+    measurementId: "G-9EVVQKWXY4"
+}
+
+const app = initializeApp(firebaseConfig)
+const auth = getAuth(app)
+
+const provider = new GoogleAuthProvider();
+
+const analytics = getAnalytics(app)
+
 // Variables
 let habitList = []
 
@@ -7,6 +36,16 @@ let habitList = []
 const viewLoggedOut = document.getElementById("logged-out-view")
 const viewLoggedIn = document.getElementById("logged-in-view")
 
+/* Logged out */
+const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
+const signInBtn = document.getElementById('sign-in-btn')
+const createAccountBtn = document.getElementById('create-account-btn')
+const emailInput = document.getElementById("email-input")
+const passwordInput = document.getElementById("password-input")
+
+
+/* Logged in */
+const signOutBtn = document.getElementById('sign-out-btn')
 const calendarModal = document.getElementById('calendar-modal')
 
 const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
@@ -81,6 +120,14 @@ renderCalendar()
 renderHabits()
 
 // ********** EVENT LISTENERS **********
+
+/* Logged out */
+signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
+signInBtn.addEventListener('click', authSignInWithEmail)
+createAccountBtn.addEventListener('click', authCreateAccountWithEmail)
+
+/* Logged in */
+signOutBtn.addEventListener("click", authSignOut)
 
 // Delete All button
 deleteAllHabitsBtn.addEventListener('click', function(){
@@ -510,25 +557,92 @@ function getHabitHTML(habitName, frequency, tracking, details){
 
 /* === Main Code === */
 
-showLoggedInView()
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        showLoggedInView()
+    } else {
+        showLoggedOutView()
+    }
+})
+
+showLoggedOutView()
+
+/* === Functions === */
+
+/* = Functions - Firebase - Authentication = */
+
+function authSignInWithGoogle() {
+    signInWithPopup(auth, provider)
+        .then((result) => {
+            console.log('Signed in with Google')
+        }).catch((error) => {
+            console.error(error.message)
+        })
+}
+
+function authSignInWithEmail() {
+    const email = emailInput.value
+    const password = passwordInput.value
+
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        clearAuthFields()
+        showLoggedInView()
+    })
+    .catch((error) => {
+        console.error(error.message)
+    })
+}
+
+function authCreateAccountWithEmail() {
+   const email = emailInput.value
+   const password = passwordInput.value
+
+   createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            clearAuthFields()
+            showLoggedInView()
+        })
+        .catch((error) => {
+            console.error(error.message)
+    })
+}
+
+function authSignOut() {
+    signOut(auth)
+        .then(() => {
+            showLoggedOutView()
+        }).catch((error) => {
+            console.error(error.message)
+        })
+}
 
 
 /* == Functions - UI Functions == */
 
 function showLoggedOutView() {
-    hideElement(viewLoggedIn)
-    showElement(viewLoggedOut)
+    hideView(viewLoggedIn)
+    showView(viewLoggedOut)
 }
 
 function showLoggedInView() {
-    hideElement(viewLoggedOut)
-    showElement(viewLoggedIn)
+    hideView(viewLoggedOut)
+    showView(viewLoggedIn)
 }
 
-function showElement(element) {
-    element.style.display = "flex"
+function showView(view) {
+    view.style.display = "flex"
 }
 
-function hideElement(element) {
-    element.style.display = "none"
+function hideView(view) {
+    view.style.display = "none"
+}
+
+function clearInputField(field) {
+	field.value = ""
+}
+
+function clearAuthFields() {
+	clearInputField(emailInput)
+	clearInputField(passwordInput)
 }

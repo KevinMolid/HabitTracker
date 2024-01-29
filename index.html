@@ -35,9 +35,14 @@
           <img class="logo-img" src="images/LogoNoBG.png">
           <h1 class="title">habitual</h1>
         </div>
-        <div class="menu-icon">
-          <i class="fa-solid fa-bars"></i>
-        </div>
+        <nav>
+          <button class="menu-icon">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <button id="sign-out-btn" class="icon-btn menu-icon">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </nav>
       </header>
 
       <section id="logged-out-view">
@@ -46,7 +51,7 @@
           
           <div class="provider-buttons">
               <button id="sign-in-with-google-btn" class="provider-btn">
-                  <img src="" class="google-btn-logo">
+                <img src="images/google.png" class="google-btn-logo">
                   Sign in with Google
               </button>
           </div>
@@ -185,6 +190,6 @@
       </footer>
     </div>
 
-    <script src="index.js" defer></script>
+    <script src="index.js" type="module" defer></script>
   </body>
 </html>
