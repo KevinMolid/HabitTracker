@@ -217,7 +217,7 @@ function renderCalendar() {
         // Determine if habits are done or not
         // pink habit:
         let pinkTick = ''
-        for (habit of habitList){
+        for (let habit of habitList){
             if (habit.color === 'pink'){
                 // If date is in habit.doneDates, show pink tick
                 if (habit.doneDates.includes(checkdate)){
@@ -228,7 +228,7 @@ function renderCalendar() {
 
         // Blue habit:
         let blueTick = ''
-        for (habit of habitList){
+        for (let habit of habitList){
             if (habit.color === 'blue'){
                 // If date is in habit.doneDates, show pink tick
                 if (habit.doneDates.includes(checkdate)){
@@ -239,7 +239,7 @@ function renderCalendar() {
 
         // Orange habit:
         let orangeTick = ''
-        for (habit of habitList){
+        for (let habit of habitList){
             if (habit.color === 'orange'){
                 // If date is in habit.doneDates, show pink tick
                 if (habit.doneDates.includes(checkdate)){
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let colorList = [0, 0, 0] // pink, blue, orange
 
         // Check for existing habits and add to color list
-        for (habit of habitsList.children) {
+        for (let habit of habitsList.children) {
             if (habit.classList.contains('pink')) {
                 colorList[0] = 1
             }
@@ -465,7 +465,7 @@ document.addEventListener('click', function(event){
         // Get the numberInput element if it exists
         const numberInput = document.getElementById(`number-input-${habitName}`)
 
-        for (habit of habitList){
+        for (let habit of habitList){
             if (habit.habitName === habitName){
 
                 // If date doesn't exist, push date to doneDates
