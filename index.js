@@ -30,7 +30,6 @@ const analytics = getAnalytics(app)
 // Variables
 let habitList = []
 
-
 /* == UI - Elements == */
 
 const viewLoggedOut = document.getElementById("logged-out-view")
@@ -174,39 +173,42 @@ function renderCalendar() {
         const active = 'inactive'
         const id = `p${day}`
 
-        // Determine if habits are done or not
-        // pink habit:
-        let pinkTick = ''
-        for (habit of habitList){
-            if (habit.color === 'pink'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    pinkTick = 'tick-pink'
+        if (habitList){
+            // Determine if habits are done or not
+            // pink habit:
+            let pinkTick = ''
+            for (habit of habitList){
+                if (habit.color === 'pink'){
+                    // If date is in habit.doneDates, show pink tick
+                    if (habit.doneDates.includes(checkdate)){
+                        pinkTick = 'tick-pink'
+                    }
+                }
+            }
+
+            // Blue habit:
+            let blueTick = ''
+            for (habit of habitList){
+                if (habit.color === 'blue'){
+                    // If date is in habit.doneDates, show pink tick
+                    if (habit.doneDates.includes(checkdate)){
+                        blueTick = 'tick-blue'
+                    }
+                }
+            }
+
+            // Orange habit:
+            let orangeTick = ''
+            for (habit of habitList){
+                if (habit.color === 'orange'){
+                    // If date is in habit.doneDates, show pink tick
+                    if (habit.doneDates.includes(checkdate)){
+                        orangeTick = 'tick-orange'
+                    }
                 }
             }
         }
 
-        // Blue habit:
-        let blueTick = ''
-        for (habit of habitList){
-            if (habit.color === 'blue'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    blueTick = 'tick-blue'
-                }
-            }
-        }
-
-        // Orange habit:
-        let orangeTick = ''
-        for (habit of habitList){
-            if (habit.color === 'orange'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    orangeTick = 'tick-orange'
-                }
-            }
-        }
 
         liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
     }
