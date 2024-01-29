@@ -47,6 +47,7 @@ const passwordInput = document.getElementById("password-input")
 const signOutBtn = document.getElementById('sign-out-btn')
 
 const userProfilePicture = document.getElementById('user-profile-picture')
+const userName = document.getElementById("user-name")
 
 const calendarModal = document.getElementById('calendar-modal')
 
@@ -555,6 +556,7 @@ function getHabitHTML(habitName, frequency, tracking, details){
 onAuthStateChanged(auth, (user) => {
     if (user) {
         showProfilePicture(userProfilePicture, user)
+        showUserName(userName, user)
         showLoggedInView()
     } else {
         showLoggedOutView()
@@ -650,5 +652,14 @@ function showProfilePicture(imgElement, user) {
         imgElement.src = photoURL
     } else {
         imgElement.src = "/images/default-profile-picture.jpeg"
+    }
+}
+
+function showUserName(element, user) {
+    const displayName = user.displayName;
+    if (displayName) {
+        element.innerText = displayName
+    } else {
+        element.innerText = "New User"
     }
 }

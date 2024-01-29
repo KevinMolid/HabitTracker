@@ -154,10 +154,14 @@ main {
 
 .user-section {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 0.8em;
   margin-bottom: 1em;
+}
+
+.user-section > h2 {
+  font-size: 1rem;
 }
 
 .user-section img {
