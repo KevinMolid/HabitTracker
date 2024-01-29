@@ -509,7 +509,7 @@ console.log(habitList)
 /* Function to get habit element HTML */
 function getHabitHTML(habitName, frequency, tracking, details){
     // Adding tracking mode elements
-    numberInput = ''
+    let numberInput = ''
 
     if (tracking === 'number'){
         numberInput = `
