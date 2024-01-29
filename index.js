@@ -176,40 +176,27 @@ function renderCalendar() {
         let blueTick = ""
         let orangeTick = ""
 
-        if (habitList){
+        if (habitList.length != 0){
             // Determine if habits are done or not
             // pink habit:
-            let pinkTick = ''
-            habitList.forEach(habit) {
+            habitList.forEach(habit => {
                 if (habit.color === 'pink'){
                     // If date is in habit.doneDates, show pink tick
                     if (habit.doneDates.includes(checkdate)){
                         pinkTick = 'tick-pink'
                     }
-                }
-            }
-
-            // Blue habit:
-            let blueTick = ''
-            for (habit of habitList){
-                if (habit.color === 'blue'){
+                } else if (habit.color === 'blue'){
                     // If date is in habit.doneDates, show pink tick
                     if (habit.doneDates.includes(checkdate)){
                         blueTick = 'tick-blue'
                     }
-                }
-            }
-
-            // Orange habit:
-            let orangeTick = ''
-            for (habit of habitList){
-                if (habit.color === 'orange'){
+                } else if (habit.color === 'orange'){
                     // If date is in habit.doneDates, show pink tick
                     if (habit.doneDates.includes(checkdate)){
                         orangeTick = 'tick-orange'
                     }
                 }
-            }
+            })
         }
 
 
