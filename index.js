@@ -180,7 +180,7 @@ function renderCalendar() {
             // Determine if habits are done or not
             // pink habit:
             let pinkTick = ''
-            for (habit of habitList){
+            habitList.forEach(habit) {
                 if (habit.color === 'pink'){
                     // If date is in habit.doneDates, show pink tick
                     if (habit.doneDates.includes(checkdate)){
