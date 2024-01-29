@@ -139,6 +139,18 @@ nav {
   width: 1.375em;
 }
 
+.secondary-btn {
+  margin-bottom: 2em;
+}
+
+.error-wrapper {
+  height: 50px;
+}
+
+.error-message {
+  color: #ccc;
+}
+
 
 /* Main */
 

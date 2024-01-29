@@ -39,8 +39,11 @@ const viewLoggedIn = document.getElementById("logged-in-view")
 const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
 const signInBtn = document.getElementById('sign-in-btn')
 const createAccountBtn = document.getElementById('create-account-btn')
+
 const emailInput = document.getElementById("email-input")
 const passwordInput = document.getElementById("password-input")
+
+const errorMessage = document.getElementById("error-message")
 
 
 /* Logged in */
@@ -575,6 +578,7 @@ function authSignInWithGoogle() {
             console.log('Signed in with Google')
         }).catch((error) => {
             console.error(error.message)
+            errorMessage.innerText = error.message
         })
 }
 
@@ -589,6 +593,7 @@ function authSignInWithEmail() {
     })
     .catch((error) => {
         console.error(error.message)
+        errorMessage.innerText = error.message
     })
 }
 
@@ -603,6 +608,7 @@ function authCreateAccountWithEmail() {
         })
         .catch((error) => {
             console.error(error.message)
+            errorMessage.innerText = error.message
     })
 }
 
