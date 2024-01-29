@@ -34,14 +34,32 @@ body {
   align-items: center;
 }
 
+.large-logo {
+  display: flex;
+  justify-content: center;
+  padding-right: 0.5em;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
 .logo-img {
   width: 24px;
   margin-right: 0.5em;
 }
 
+.large-logo-img {
+  width: 36px;
+  margin-right: 0.75em;
+}
+
 .title{
     margin: 0;
     font-size: 1.5em; /* 24 px */
+}
+
+.large-title{
+  margin: 0;
+  font-size: 2.25em; /* 36 px */
 }
 
 nav {
