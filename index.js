@@ -172,6 +172,9 @@ function renderCalendar() {
         const checkdate = `${day}${month}${year}`
         const active = 'inactive'
         const id = `p${day}`
+        let pinkTick = ""
+        let blueTick = ""
+        let orangeTick = ""
 
         if (habitList){
             // Determine if habits are done or not
