@@ -1,4 +1,4 @@
-// Imports
+/* ========== IMPORTS ========== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics.js"
 import { getAuth, 
@@ -8,8 +8,16 @@ import { getAuth,
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
+import { getFirestore, 
+    collection,
+    doc,
+    addDoc,
+    getDocs,
+    updateDoc,
+    serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
-/* === Firebase Setup === */
+
+/* ========== FIREBASE SETUP ========== */
 const firebaseConfig = {
     apiKey: "AIzaSyCpQ81liexQS4EuiSJTXlqlPs5xlMcfQc4",
     authDomain: "habitual-102f5.firebaseapp.com",
@@ -22,87 +30,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-
 const provider = new GoogleAuthProvider();
-
 const analytics = getAnalytics(app)
+const db = getFirestore(app);
 
-// Variables
+
+/* ========== VARIABLES ========== */
 let habitList = []
 
-/* == UI - Elements == */
-
-const viewLoggedOut = document.getElementById("logged-out-view")
-const viewLoggedIn = document.getElementById("logged-in-view")
-
-/* Logged out */
-const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
-const signInBtn = document.getElementById('sign-in-btn')
-const createAccountBtn = document.getElementById('create-account-btn')
-
-const emailInput = document.getElementById("email-input")
-const passwordInput = document.getElementById("password-input")
-
-const errorMessage = document.getElementById("error-message")
-
-
-/* Logged in */
-const signOutBtn = document.getElementById('sign-out-btn')
-
-const userProfilePicture = document.getElementById('user-profile-picture')
-const userName = document.getElementById("user-name")
-
-const calendarModal = document.getElementById('calendar-modal')
-
-const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
-const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
-const warningModal = document.getElementById('warning-modal')
-const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
-const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
-
-
-// ********** FUNCTIONS **********
-// Set Local Storage
-function setLocalStorage(){
-    localStorage.setItem('habitList', JSON.stringify(habitList))
-}
-
-
-// Clear localStorage
-function clearLocalStorage(){
-    localStorage.clear() 
-}
-
-// Clear habitsList
-function clearHabitsList(){
-    habitsList.innerHTML = ''
-}
-
-function fetchLocalStorage(){
-    habitList = JSON.parse(localStorage.getItem('habitList'))
-    // If no Local Storage -> Set local storage to empty list
-    if (!habitList) {
-        localStorage.setItem('habitList', JSON.stringify([]))
-        habitList = JSON.parse(localStorage.getItem('habitList'))
-    }
-}
-
-// ********** HABITS **********
-// Render habits to screen
-function renderHabits(){
-    // Reset habits list to empty element
-    habitsList.innerHTML = ''
-    for (let habit of habitList){
-        // Create element and render to screen
-        const listItem = document.createElement('li')
-        listItem.classList.add('habit') // Add the habit class for general styling
-        listItem.classList.add(`${habit.color}`) // Add color class for specific styling
-        listItem.innerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
-        habitsList.appendChild(listItem)
-    }
-}
-
-// ********** CALENDAR **********
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
 prevNextIcon = document.querySelectorAll('.prev-next-icon')
@@ -117,15 +52,173 @@ const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 
-// Run app
-// Get items from local storage
-fetchLocalStorage()
-// Render calendar to screen
-renderCalendar()
-// Render habits to screen
-renderHabits()
+/* ========== ELEMENTS ========== */
+/* == UI - Views == */
+const viewLoggedOut = document.getElementById("logged-out-view")
+const viewLoggedIn = document.getElementById("logged-in-view")
 
-// ********** EVENT LISTENERS **********
+/* == Logged out elements == */
+const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
+const signInBtn = document.getElementById('sign-in-btn')
+const createAccountBtn = document.getElementById('create-account-btn')
+
+const emailInput = document.getElementById("email-input")
+const passwordInput = document.getElementById("password-input")
+
+const errorMessage = document.getElementById("error-message")
+
+/* == Logged in elements == */
+const signOutBtn = document.getElementById('sign-out-btn')
+
+const userProfilePicture = document.getElementById('user-profile-picture')
+const userName = document.getElementById("user-name")
+
+const calendarModal = document.getElementById('calendar-modal')
+
+const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
+const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
+const warningModal = document.getElementById('warning-modal')
+const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
+const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
+
+/* == Habit elements == */
+const addHabitButton = document.getElementById('add-habit')
+const habitForm = document.getElementById('habit-form')
+const habitNameInput = document.getElementById('habit-name')
+const habitFrequencyInput = document.getElementById('habit-frequency')
+const habitTrackingInput = document.getElementById('habit-tracking')
+const habitDetailsInput = document.getElementById('habit-details')
+const colorBtns = document.getElementsByClassName("color-btn")
+
+
+/* ========== FUNCTIONS ========== */
+/* == Habit functions == */
+function clearAll(element) {
+    element.innerHTML = ''
+}
+
+// Render habits to screen
+function renderHabits(){
+    for (let habit of habitList){
+        renderHabit(habit)
+    }
+}
+
+function renderHabit(habit) {
+    // Pick color from colorState
+    const colorState = habit.colorState
+    const color = colorState === 1 ? "pink" : 
+                    colorState === 2 ? "blue" :
+                    colorState === 3 ? "orange" :
+                    colorState === 4 ? "white" :
+                    "black"
+
+    const habitInnerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
+
+    habitsList.innerHTML += `
+        <li class="habit ${color}">
+            ${habitInnerHTML}
+        </li>
+    `
+}
+
+/* == Calendar functions == */
+// Function to render the calendar
+function renderCalendar() {
+    let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay(), // Get first day of month
+    lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate(), // Get last date of month
+    lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay(), // Get last day of month
+    lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate() // Get last date of previous month
+
+    let liTag = ""
+
+    for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
+        // Get the date
+        const day = lastDateOfLastMonth -i + 1
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const checkdate = `${day}${month}${year}`
+        const isToday = "inactive"
+        const id = `p${day}`
+
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
+    }
+
+    for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
+        const isToday = i === date.getDate() && currMonth === new Date().getMonth()
+                        && currYear === new Date().getFullYear() ? "active" : ""
+
+        // Get the date
+        const day = i
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const checkdate = `${day}${month}${year}`
+        const id = `c${day}`
+
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
+    }
+
+    for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
+        const day = i - lastDayOfMonth + 1
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const id = `n${day}`
+        const isToday = "inactive"
+        const checkdate = `${day}${month}${year}`
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
+    }
+
+    currentDate.innerText = `${months[currMonth]}  ${currYear}`
+    daysTag.innerHTML = liTag
+}
+
+// Function to get HTML for calendar list item
+function getLiTagHTML(id, isToday, day, checkdate){
+    let ticksHTML = ''
+    for (let habit of habitList) {
+
+        let inactive = 'tick-inactive'
+        if (habit.doneDates.includes(checkdate)) {
+            inactive = ''
+        }
+
+        const colorState = habit.colorState
+        const color = colorState === 1 ? "pink" : 
+                        colorState === 2 ? "blue" :
+                        colorState === 3 ? "orange" :
+                        colorState === 4 ? "white" :
+                        "black"
+        ticksHTML += `<div class="tick tick-${color} ${inactive}"></div>`
+    }
+
+    return `
+        <li id="${id}" class="date-li ${isToday}">
+            <div class="date-wrapper">${day}</div>
+            <div class="ticks">
+                ${ticksHTML}
+            </div>
+        </li>
+    `
+}
+
+// Function to render calendar modal
+function renderCalendarModal(date){
+    const calendarModalHeaderDate = document.getElementById('calendar-modal-header-date')
+    const calendarModalHeaderDay = document.getElementById('calendar-modal-header-day')
+    const day = days[date.getDay()]
+    const dt = date.getDate()
+    const mnt = fullMonths[date.getMonth()]
+    const yr = date.getFullYear()
+    calendarModalHeaderDay.innerText = day
+    calendarModalHeaderDate.innerText = `${mnt} ${dt}, ${yr}`
+}
+
+/* ========== MAIN CODE ========== */
+// Fetch db and render calendar / habits
+fetchOnceAndRenderHabitsFromDB()
+
+
+/* ========== EVENT LISTENERS ========== */
 
 /* Logged out */
 signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
@@ -153,140 +246,12 @@ closeWarningModalBtn.addEventListener('click', function(){
 confirmDeleteAllBtn.addEventListener('click', function(){
     // Hide warning modal
     warningModal.style.display = 'none'
-    // Clear local storage and habits list
-    clearLocalStorage()
-    clearHabitsList()
-    // Set Local storage to empty list   
-    fetchLocalStorage() 
+    clearAll(HabitsList)
     renderCalendar()
 })
 
 
-// Function to render the calendar
-function renderCalendar() {
-    let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay(), // Get first day of month
-    lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate(), // Get last date of month
-    lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay(), // Get last day of month
-    lastDateOfLastMonth = new Date(currYear, currMonth, 0).getDate() // Get last date of previous month
-
-    let liTag = ""
-
-    for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
-        // Get the date
-        const day = lastDateOfLastMonth -i + 1
-        const month = months[new Date(currYear, currMonth, 1).getMonth()]
-        const year = new Date(currYear, currMonth, 1).getFullYear()
-        const checkdate = `${day}${month}${year}`
-        const active = 'inactive'
-        const id = `p${day}`
-        let pinkTick = ""
-        let blueTick = ""
-        let orangeTick = ""
-
-        if (habitList.length != 0){
-            // Determine if habits are done or not
-            // pink habit:
-            habitList.forEach(habit => {
-                if (habit.color === 'pink'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        pinkTick = 'tick-pink'
-                    }
-                } else if (habit.color === 'blue'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        blueTick = 'tick-blue'
-                    }
-                } else if (habit.color === 'orange'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        orangeTick = 'tick-orange'
-                    }
-                }
-            })
-        }
-
-
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
-    }
-
-    for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
-        let active = i === date.getDate() && currMonth === new Date().getMonth()
-                        && currYear === new Date().getFullYear() ? "active" : ""
-
-        // Get the date
-        const day = i
-        const month = months[new Date(currYear, currMonth, 1).getMonth()]
-        const year = new Date(currYear, currMonth, 1).getFullYear()
-        const checkdate = `${day}${month}${year}`
-        const id = `c${day}`
-
-        // Determine if habits are done or not
-        // pink habit:
-        let pinkTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'pink'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    pinkTick = 'tick-pink'
-                }
-            }
-        }
-
-        // Blue habit:
-        let blueTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'blue'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    blueTick = 'tick-blue'
-                }
-            }
-        }
-
-        // Orange habit:
-        let orangeTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'orange'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    orangeTick = 'tick-orange'
-                }
-            }
-        }
-
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
-    }
-
-    for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
-        const day = i - lastDayOfMonth + 1
-        const id = `n${day}`
-        const active = 'inactive'
-        const pinkTick = ''
-        const blueTick = ''
-        const orangeTick = ''
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
-    }
-
-    currentDate.innerText = `${months[currMonth]}  ${currYear}`
-    daysTag.innerHTML = liTag
-}
-
-// Function to get HTML for calendar list item
-function getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick){
-    return `
-        <li id="${id}" class="date-li ${active}">
-            <div class="date-wrapper">${day}</div>
-            <div class="ticks">
-                <div class="tick ${pinkTick}"></div>
-                <div class="tick ${blueTick}"></div>
-                <div class="tick ${orangeTick}"></div>
-            </div>
-        </li>
-    `
-}
-
-// Previous and Next calendar icons
+// Add event listeners to Previous and Next calendar icons
 prevNextIcon.forEach(icon => {
     icon.addEventListener('click', () => {
         currMonth = icon.id === 'prev' ? currMonth - 1 : currMonth + 1
@@ -297,149 +262,61 @@ prevNextIcon.forEach(icon => {
             currMonth = date.getMonth() // updating current month with new date month
         }
 
+        // Update calendar
         renderCalendar()
     })
 })
 
-// Function to render calendar modal
-function renderCalendarModal(date){
-    const calendarModalHeaderDate = document.getElementById('calendar-modal-header-date')
-    const calendarModalHeaderDay = document.getElementById('calendar-modal-header-day')
-    const day = days[date.getDay()]
-    const dt = date.getDate()
-    const mnt = fullMonths[date.getMonth()]
-    const yr = date.getFullYear()
-    calendarModalHeaderDay.innerText = day
-    calendarModalHeaderDate.innerText = `${mnt} ${dt}, ${yr}`
+
+/* == New habits event listeners == */
+
+// Show the form when the + Add Habit button is clicked
+addHabitButton.addEventListener('click', () => {
+    habitForm.style.display = 'block'
+
+})
+
+for (let colorBtn of colorBtns) {
+    colorBtn.addEventListener("click", selectColor)
 }
 
+// Handle the form submission (save habit)
+habitForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    
+    const habitName = habitNameInput.value.trim().toLowerCase()
+    const frequency = habitFrequencyInput.value.trim().toLowerCase()
+    const tracking = habitTrackingInput.value.trim().toLowerCase()
+    const details = habitDetailsInput.value
+    const user = auth.currentUser
 
-// ********** NEW HABITS **********
-
-// Add event listeners to document
-document.addEventListener('DOMContentLoaded', () => {
-    const addHabitButton = document.getElementById('add-habit')
-    const habitForm = document.getElementById('habit-form')
-    const habitNameInput = document.getElementById('habit-name')
-    const habitFrequencyInput = document.getElementById('habit-frequency')
-    const habitTrackingInput = document.getElementById('habit-tracking')
-    const habitDetailsInput = document.getElementById('habit-details')
-
-    // Function to add a habit to the list
-    function addHabit(habitName, frequency, tracking, details) {
-        let colorList = [0, 0, 0] // pink, blue, orange
-
-        // Check for existing habits and add to color list
-        for (let habit of habitsList.children) {
-            if (habit.classList.contains('pink')) {
-                colorList[0] = 1
-            }
-            if (habit.classList.contains('blue')) {
-                colorList[1] = 1
-            }
-            if (habit.classList.contains('orange')) {
-                colorList[2] = 1
-            }
-        }
-
-        // set color
-        let color = ''
-        if (colorList[0] === 0) {
-            color = 'pink'
-        }
-        else if (colorList[1] === 0) {
-            color = 'blue'
-        }
-        else if (colorList[2] === 0) {
-            color = 'orange'
-        }
-
-        // Create element and render to screen
-        const listItem = document.createElement('li')
-        listItem.classList.add('habit') // Add the habit class for general styling
-        listItem.classList.add(`${color}`) // Add color class for specific styling
-        listItem.innerHTML = getHabitHTML(habitName, frequency, tracking, details)
-        habitsList.appendChild(listItem)
-
-
-        // Save habit to Local Storage
-        habitList.push({
-            habitName: `${habitName}`,
-            frequency: `${frequency}`,
-            tracking: `${tracking}`,
-            details: `${details}`,
-            color: `${color}`,
-            doneDates: [],
-            numbers: []
-        })
-        setLocalStorage()
+    if (colorState) { // Ensuring color selection
+        addHabitToDB(habitName, frequency, tracking, details, user)
+        clearInputField(habitNameInput)
+        clearInputField(habitFrequencyInput)
+        clearInputField(habitTrackingInput)
+        clearInputField(habitDetailsInput)
+        resetAllColorBtns(colorBtns)
+        habitForm.style.display = "none"
     }
+    fetchOnceAndRenderHabitsFromDB()
+})
 
-    // Show the form when the + New Habit button is clicked
-    addHabitButton.addEventListener('click', () => {
-        if (JSON.parse(localStorage.getItem('habitList')).length < 3){
-            habitForm.style.display = 'block'
-        } else {
-            // Show max habits message
-            let maxMessage = document.getElementById('max-message')
-            maxMessage.style.display = 'inline'
-            setTimeout(() => {
-                maxMessage.style.display = 'none'
-            }, 3000);
-        }
-    });
+/* === State === */
 
-    // Handle the form submission
-    habitForm.addEventListener('submit', (event) => {
-        event.preventDefault()
-        const habitName = habitNameInput.value.trim().toLowerCase()
-        const frequency = habitFrequencyInput.value.trim().toLowerCase()
-        const tracking = habitTrackingInput.value.trim().toLowerCase()
-        const details = habitDetailsInput.value
+let colorState = 0
 
-        // Check if habit exists
-        const habitNames = habitList.map(function(habit){
-            return habit.habitName
-        })
-        if (!habitNames.includes(habitName)){
-            addHabit(habitName, frequency, tracking, details)
-            habitNameInput.value = '' // Reset input field
-            habitDetailsInput.value = '' // Reset text area
-            habitForm.style.display = 'none' // Hide the form again
-        } else {
-            // Show exists message
-            let existsMessage = document.getElementById('exists-message')
-            existsMessage.style.display = 'inline'
-            setTimeout(() => {
-                existsMessage.style.display = 'none'
-            }, 3000);
-        }
-    });
-});
-
-// Set copyright year
-document.getElementById("current-year").innerText = currYear
+/* === Functions === */
 
 // Delete habits
 document.addEventListener('click', function(event){
     if (event.target.classList.contains('delete-btn')){
-        // find habit name from id
-        const habitName = event.target.id.slice(7)
-        // Make list of habit names
-        const habitNamesArr = habitList.map(habit => habit.habitName)
-        // Find index of habit name
-        const index = habitNamesArr.indexOf(habitName)
-        // Delete habit from habit list
-        habitList.splice(index, 1)
-        // Update local storage and re-render screen
-        setLocalStorage()
-        renderCalendar()
-        renderHabits()
+        // Delete habit
     }
 })
 
 // Document event listeners
-document.addEventListener('click', function(event){
+document.addEventListener('click', async function(event){
     // Calendar click events
     // Show calendar modal when clicking on a day
     if (event.target.classList.contains('date-li')){
@@ -475,6 +352,8 @@ document.addEventListener('click', function(event){
         for (let habit of habitList){
             if (habit.habitName === habitName){
 
+                const doneDates = habit.doneDates
+
                 // If date doesn't exist, push date to doneDates
                 if (habit.doneDates.slice(-1) != date){
                     // If tracking is number
@@ -483,8 +362,13 @@ document.addEventListener('click', function(event){
                         numberInput.value = ''
                     }
                     // Push date and render
-                    habit.doneDates.push(date)
-                    setLocalStorage()
+                    doneDates.push(date)
+
+                    const habitRef = doc(db, "habits", `${habit.habitId}`)
+                    // Set the "capital" field of the city 'DC'
+                    await updateDoc(habitRef, {
+                        doneDates: doneDates
+                    })
                     renderCalendar()
                 }
             }
@@ -507,10 +391,6 @@ document.addEventListener('click', function(event){
     }
 
 })
-
-
-/* Console log the habit list */
-console.log(habitList)
 
 
 /* Function to get habit element HTML */
@@ -553,6 +433,10 @@ function getHabitHTML(habitName, frequency, tracking, details){
     `
 }
 
+// Footer
+// Set copyright year
+document.getElementById("current-year").innerText = currYear
+
 
 /* === Main Code === */
 
@@ -575,7 +459,7 @@ showLoggedOutView()
 function authSignInWithGoogle() {
     signInWithPopup(auth, provider)
         .then((result) => {
-            console.log('Signed in with Google')
+            // console.log('Signed in with Google')
         }).catch((error) => {
             console.error(error.message)
             errorMessage.innerText = error.message
@@ -621,6 +505,47 @@ function authSignOut() {
         })
 }
 
+/* = Functions - Firebase - Cloud Firestore = */
+
+async function addHabitToDB(habitName, frequency, tracking, details, user) {
+    try {
+        const docRef = await addDoc(collection(db, "habits"), {
+            habitId : '',
+            habitName: habitName,
+            uid: user.uid,
+            timeAdded: serverTimestamp(),
+            frequency: frequency,
+            tracking: tracking,
+            details: details,
+            colorState: colorState,
+            doneDates: [],
+            numbers: [],
+            timestamps: [],
+            durations: []
+          })
+
+          // Set habitId
+          const habitRef = doc(db, "habits", `${docRef.id}`);
+            await updateDoc(habitRef, {
+                habitId: docRef.id
+            })
+
+    } catch (error) {
+        console.error(error.message)
+    }
+}
+
+async function fetchOnceAndRenderHabitsFromDB() {
+    clearAll(habitsList)
+
+    const querySnapshot = await getDocs(collection(db, "habits"))
+    habitList = []
+    querySnapshot.forEach((doc) => {
+        habitList.push(doc.data())
+    })
+    renderCalendar()
+    renderHabits()
+}
 
 /* == Functions - UI Functions == */
 
@@ -668,4 +593,41 @@ function showUserName(element, user) {
     } else {
         element.innerText = "New User"
     }
+}
+
+/* = Functions - UI Functions - Color = */
+
+function selectColor(event) {
+    const selectedColorBtnId = event.currentTarget.id
+    
+    changeColorAfterSelection(selectedColorBtnId, colorBtns)
+    
+    const chosenColorValue = returnColorValueFromColorBtnID(selectedColorBtnId)
+    
+    colorState = chosenColorValue
+}
+
+function changeColorAfterSelection(selectedColorBtnId, colorBtns) {
+    for (let colorBtn of colorBtns) {
+        if (selectedColorBtnId === colorBtn.id) {
+            colorBtn.classList.remove("unselected-color")          
+            colorBtn.classList.add("selected-color")
+        } else {
+            colorBtn.classList.remove("selected-color")
+            colorBtn.classList.add("unselected-color")
+        }
+    }
+}
+
+function resetAllColorBtns(colorBtns) {
+    for (let colorBtn of colorBtns) {
+        colorBtn.classList.remove("selected-emoji")
+        colorBtn.classList.remove("unselected-emoji")
+    }
+    
+    colorState = 0
+}
+
+function returnColorValueFromColorBtnID(elementId) {
+    return Number(elementId.slice(6))
 }

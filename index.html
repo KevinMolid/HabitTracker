@@ -168,9 +168,9 @@
             </div>
 
             <!-- Habit List -->
-            <ul id="habits">
+            <div id="habits">
               <!-- Habit items will be added here dynamically with JavaScript -->
-            </ul>
+            </div>
           </section>
 
           <!-- Add Habit form -->
@@ -181,13 +181,13 @@
                   <input type="text" id="habit-name" name="habit-name" maxlength="10" required>
 
                   <label for="habit-frequency">Frequency:</label>
-                  <select id="habit-frequency" name="habit-frequency">
+                  <select id="habit-frequency" name="habit-frequency" required>
                       <option value="daily">Daily</option>
                       <option value="weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
                   </select>
 
-                  <label for="habit-tracking">Tracking:</label>
+                  <label for="habit-tracking">Tracking:</label required>
                   <select id="habit-tracking" name="habit-tracking">
                       <option value="binary">Binary</option>
                       <option value="number">Number</option>
@@ -196,6 +196,25 @@
 
                   <label for="habit-details">Details:</label>
                   <textarea rows="4" id="habit-details" name="habit-details"></textarea>
+
+                  <p>Color:</p>
+                  <div class="color-picker">
+                      <button type="button" id="color-1" class="color-btn">
+                        <div></div>
+                      </button>
+                      <button type="button" id="color-2" class="color-btn">
+                        <div></div>
+                      </button>
+                      <button type="button" id="color-3" class="color-btn">
+                        <div></div>
+                      </button>
+                      <button type="button" id="color-4" class="color-btn">
+                        <div></div>
+                      </button>
+                      <button type="button" id="color-5" class="color-btn">
+                        <div></div>
+                      </button>
+                  </div>
 
                   <button type="submit">Save Habit</button>
                   <p class="exists-message" id="exists-message">Habit exists!</p>

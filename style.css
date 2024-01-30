@@ -1,3 +1,13 @@
+:root {
+  --pink: #e215ef;
+  --pink-hover: #ce16da;
+  --blue: #15afef;
+  --blue-hover: #16a1da;
+  --orange: #ef7215;
+  --orange-hover: #da6a16;
+}
+
+
 /* Basic Reset */
 * {
     margin: 0;
@@ -118,7 +128,7 @@ nav {
 }
 
 .primary-btn {
-  background: #ef7215;
+  background: var(--orange);
   margin: 0 0 1em;
 }
 
@@ -156,7 +166,7 @@ nav {
 /* Main */
 
 main {
-    padding: 20px;
+    padding: 0 20px;
     padding-bottom: 60px;
     max-width: 800px;
     margin: 20px auto;
@@ -258,6 +268,7 @@ main {
 
 .days li .ticks {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   gap: 4px;
   pointer-events: none;
@@ -272,15 +283,19 @@ main {
 }
 
 .tick-pink {
-  background: #e215ef;
+  background: var(--pink);
 }
 
 .tick-blue {
-  background: #15afef;
+  background: var(--blue);
 }
 
 .tick-orange {
-  background: #ef7215;
+  background: var(--orange);
+}
+
+.tick-inactive {
+  background: #444444;
 }
 
 .date-wrapper {
@@ -309,7 +324,7 @@ main {
 }
 
 .days li.active .date-wrapper::before {
-  background: #ef7215;
+  background: var(--orange);
 }
 
 /* Calendar modal */
@@ -440,34 +455,50 @@ ul {
 /* Habit colors */
 
 .pink button {
-  background: #e215ef;
+  background: var(--pink);
 }
 
 .pink button:hover {
-  background: #ce16da;
+  background: var(--pink-hover);
 }
 
 .blue button {
-  background: #15afef;
+  background: var(--blue);
 }
 
 .blue button:hover {
-  background: #16a1da;
+  background: var(--blue-hover);
 }
 
 .orange button {
-  background: #ef7215;
+  background: var(--orange);
 }
 
 .orange button:hover {
-  background: #da6a16;
+  background: var(--orange-hover);
+}
+
+.white button {
+  background: white;
+}
+
+.white button:hover {
+  background: #eeeeee;
+}
+
+.black button {
+  background: black;
+}
+
+.black button:hover {
+  background: #111111;
 }
 
 /* Buttons */
 
 button {
     display: inline-block;
-    background: #ef7215;
+    background: var(--orange);
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -477,7 +508,7 @@ button {
 }
 
 button:hover {
-    background: #da6a16;
+    background: var(--orange-hover);
 }
 
 .close-warning-modal-btn {
@@ -527,6 +558,54 @@ form textarea {
   border: none;
   resize: none;
 }
+
+.color-picker {
+  display: flex;
+  gap: 0.5em;
+}
+
+.color-btn {
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.color-btn:hover {
+  transform: scale(1.2);
+}
+
+#color-1 {
+  background-color: var(--pink);
+}
+
+#color-2 {
+  background-color: var(--blue);
+}
+
+#color-3 {
+  background-color: var(--orange);
+}
+
+#color-4 {
+  background-color: white;
+}
+
+#color-5 {
+  background-color: black;
+}
+
+.selected-color {
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.unselected-color {
+  transform: scale(1);
+  opacity: 0.5;
+}
+
+/* Footer */
 
 footer {
     display: flex;
