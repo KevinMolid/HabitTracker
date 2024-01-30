@@ -9,8 +9,9 @@ import { getAuth,
     GoogleAuthProvider,
     signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
 import { getFirestore, 
-    doc, 
-    setDoc, 
+    collection,
+    addDoc,
+    getDocs,
     serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
 /* === Firebase Setup === */
@@ -29,8 +30,6 @@ const auth = getAuth(app)
 const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app)
 const db = getFirestore(app);
-
-console.log(db)
 
 // Variables
 let habitList = []
@@ -72,32 +71,14 @@ const habitNameInput = document.getElementById('habit-name')
 const habitFrequencyInput = document.getElementById('habit-frequency')
 const habitTrackingInput = document.getElementById('habit-tracking')
 const habitDetailsInput = document.getElementById('habit-details')
+const colorBtns = document.getElementsByClassName("color-btn")
 
 
 // ********** FUNCTIONS **********
-// Set Local Storage
-function setLocalStorage(){
-    localStorage.setItem('habitList', JSON.stringify(habitList))
-}
-
-
-// Clear localStorage
-function clearLocalStorage(){
-    localStorage.clear() 
-}
 
 // Clear habitsList
 function clearHabitsList(){
     habitsList.innerHTML = ''
-}
-
-function fetchLocalStorage(){
-    habitList = JSON.parse(localStorage.getItem('habitList'))
-    // If no Local Storage -> Set local storage to empty list
-    if (!habitList) {
-        localStorage.setItem('habitList', JSON.stringify([]))
-        habitList = JSON.parse(localStorage.getItem('habitList'))
-    }
 }
 
 // ********** HABITS **********
@@ -109,7 +90,7 @@ function renderHabits(){
         // Create element and render to screen
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
-        listItem.classList.add(`${habit.color}`) // Add color class for specific styling
+        //listItem.classList.add(`${habit.color}`) // Add color class for specific styling
         listItem.innerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
         habitsList.appendChild(listItem)
     }
@@ -131,12 +112,10 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 
 // Run app
-// Get items from local storage
-fetchLocalStorage()
+// Fetch db
+fetchOnceAndRenderHabitsFromDB()
 // Render calendar to screen
 renderCalendar()
-// Render habits to screen
-renderHabits()
 
 // ********** EVENT LISTENERS **********
 
@@ -166,11 +145,7 @@ closeWarningModalBtn.addEventListener('click', function(){
 confirmDeleteAllBtn.addEventListener('click', function(){
     // Hide warning modal
     warningModal.style.display = 'none'
-    // Clear local storage and habits list
-    clearLocalStorage()
     clearHabitsList()
-    // Set Local storage to empty list   
-    fetchLocalStorage() 
     renderCalendar()
 })
 
@@ -332,17 +307,13 @@ function renderCalendarModal(date){
 
 // Show the form when the + Add Habit button is clicked
 addHabitButton.addEventListener('click', () => {
-    if (JSON.parse(localStorage.getItem('habitList')).length < 3){
-        habitForm.style.display = 'block'
-    } else {
-        // Show max habits message
-        let maxMessage = document.getElementById('max-message')
-        maxMessage.style.display = 'inline'
-        setTimeout(() => {
-            maxMessage.style.display = 'none'
-        }, 3000)
-    }
+    habitForm.style.display = 'block'
+
 })
+
+for (let colorBtn of colorBtns) {
+    colorBtn.addEventListener("click", selectColor)
+}
 
 // Handle the form submission (save habit)
 habitForm.addEventListener('submit', (event) => {
@@ -354,18 +325,31 @@ habitForm.addEventListener('submit', (event) => {
     const details = habitDetailsInput.value
     const user = auth.currentUser
 
-    addHabitToDB(habitName, frequency, tracking, details, user)
+    if (colorState) { // Ensuring color selection
+        addHabitToDB(habitName, frequency, tracking, details, user)
+        clearInputField(habitNameInput)
+        clearInputField(habitFrequencyInput)
+        clearInputField(habitTrackingInput)
+        clearInputField(habitDetailsInput)
+        resetAllColorBtns(colorBtns)
+        habitForm.style.display = "none"
+    }
+
+    
 
     // Check if habit exists
     // if does not exist 
         // Reset input field
         // Reset text area
         // Hide the form again
-    habitForm.style.display = "none"
     // else
         // Show exists error
 
 })
+
+/* === State === */
+
+let colorState = 0
 
 /* === Functions === */
 
@@ -412,8 +396,6 @@ document.addEventListener('click', function(event){
         const index = habitNamesArr.indexOf(habitName)
         // Delete habit from habit list
         habitList.splice(index, 1)
-        // Update local storage and re-render screen
-        setLocalStorage()
         renderCalendar()
         renderHabits()
     }
@@ -465,7 +447,6 @@ document.addEventListener('click', function(event){
                     }
                     // Push date and render
                     habit.doneDates.push(date)
-                    setLocalStorage()
                     renderCalendar()
                 }
             }
@@ -488,10 +469,6 @@ document.addEventListener('click', function(event){
     }
 
 })
-
-
-/* Console log the habit list */
-console.log(habitList)
 
 
 /* Function to get habit element HTML */
@@ -610,21 +587,33 @@ function authSignOut() {
 
 async function addHabitToDB(habitName, frequency, tracking, details, user) {
     try {
-        await setDoc(doc(db, "habits", "habit01"), {
+        const docRef = await addDoc(collection(db, "habits"), {
             habitName: habitName,
             uid: user.uid,
             timeAdded: serverTimestamp(),
             frequency: frequency,
             tracking: tracking,
             details: details,
+            colorState: colorState,
             doneDates: [],
             numbers: [],
             timestamps: [],
             durations: []
           })
+          console.log("Document written with ID: ", docRef.id)
     } catch (error) {
         console.error(error.message)
     }
+}
+
+async function fetchOnceAndRenderHabitsFromDB() {
+    const querySnapshot = await getDocs(collection(db, "habits"))
+    querySnapshot.forEach((doc) => {
+        //console.log(doc.id, " => ", doc.data())
+        const stringToLog = `${doc.id}: ${doc.data().habitName}`
+        habitList.push(doc.data())
+    })
+    renderHabits()
 }
 
 /* == Functions - UI Functions == */
@@ -673,4 +662,41 @@ function showUserName(element, user) {
     } else {
         element.innerText = "New User"
     }
+}
+
+/* = Functions - UI Functions - Color = */
+
+function selectColor(event) {
+    const selectedColorBtnId = event.currentTarget.id
+    
+    changeColorAfterSelection(selectedColorBtnId, colorBtns)
+    
+    const chosenColorValue = returnColorValueFromColorBtnID(selectedColorBtnId)
+    
+    colorState = chosenColorValue
+}
+
+function changeColorAfterSelection(selectedColorBtnId, colorBtns) {
+    for (let colorBtn of colorBtns) {
+        if (selectedColorBtnId === colorBtn.id) {
+            colorBtn.classList.remove("unselected-color")          
+            colorBtn.classList.add("selected-color")
+        } else {
+            colorBtn.classList.remove("selected-color")
+            colorBtn.classList.add("unselected-color")
+        }
+    }
+}
+
+function resetAllColorBtns(colorBtns) {
+    for (let colorBtn of colorBtns) {
+        colorBtn.classList.remove("selected-emoji")
+        colorBtn.classList.remove("unselected-emoji")
+    }
+    
+    colorState = 0
+}
+
+function returnColorValueFromColorBtnID(elementId) {
+    return Number(elementId.slice(6))
 }
