@@ -1,4 +1,4 @@
-// Imports
+/* ========== IMPORTS ========== */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-app.js"
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-analytics.js"
 import { getAuth, 
@@ -16,7 +16,8 @@ import { getFirestore,
     updateDoc,
     serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
-/* === Firebase Setup === */
+
+/* ========== FIREBASE SETUP ========== */
 const firebaseConfig = {
     apiKey: "AIzaSyCpQ81liexQS4EuiSJTXlqlPs5xlMcfQc4",
     authDomain: "habitual-102f5.firebaseapp.com",
@@ -33,79 +34,10 @@ const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app)
 const db = getFirestore(app);
 
-// Variables
+
+/* ========== VARIABLES ========== */
 let habitList = []
 
-/* == UI - Elements == */
-
-const viewLoggedOut = document.getElementById("logged-out-view")
-const viewLoggedIn = document.getElementById("logged-in-view")
-
-/* Logged out */
-const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
-const signInBtn = document.getElementById('sign-in-btn')
-const createAccountBtn = document.getElementById('create-account-btn')
-
-const emailInput = document.getElementById("email-input")
-const passwordInput = document.getElementById("password-input")
-
-const errorMessage = document.getElementById("error-message")
-
-
-/* Logged in */
-const signOutBtn = document.getElementById('sign-out-btn')
-
-const userProfilePicture = document.getElementById('user-profile-picture')
-const userName = document.getElementById("user-name")
-
-const calendarModal = document.getElementById('calendar-modal')
-
-const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
-const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
-const warningModal = document.getElementById('warning-modal')
-const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
-const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
-
-// Habit elements
-const addHabitButton = document.getElementById('add-habit')
-const habitForm = document.getElementById('habit-form')
-const habitNameInput = document.getElementById('habit-name')
-const habitFrequencyInput = document.getElementById('habit-frequency')
-const habitTrackingInput = document.getElementById('habit-tracking')
-const habitDetailsInput = document.getElementById('habit-details')
-const colorBtns = document.getElementsByClassName("color-btn")
-
-
-// ********** FUNCTIONS **********
-
-// Clear habitsList
-function clearHabitsList(){
-    habitsList.innerHTML = ''
-}
-
-// ********** HABITS **********
-// Render habits to screen
-function renderHabits(){
-    // Reset habits list to empty element
-    habitsList.innerHTML = ''
-    for (let habit of habitList){
-        // Pick color from colorState
-        const colorState = habit.colorState
-        const color = colorState === 1 ? "pink" : 
-                        colorState === 2 ? "blue" :
-                        colorState === 3 ? "orange" :
-                        colorState === 4 ? "white" :
-                        "black"
-        // Create element and render to screen
-        const listItem = document.createElement('li')
-        listItem.classList.add('habit') // Add the habit class for general styling
-        listItem.classList.add(`${color}`) // Add color class for specific styling
-        listItem.innerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
-        habitsList.appendChild(listItem)
-    }
-}
-
-// ********** CALENDAR **********
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
 prevNextIcon = document.querySelectorAll('.prev-next-icon')
@@ -120,44 +52,77 @@ const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 
-// Run app
-// Fetch db and render calendar / habits
-fetchOnceAndRenderHabitsFromDB()
+/* ========== ELEMENTS ========== */
+/* == UI - Views == */
+const viewLoggedOut = document.getElementById("logged-out-view")
+const viewLoggedIn = document.getElementById("logged-in-view")
+
+/* == Logged out elements == */
+const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
+const signInBtn = document.getElementById('sign-in-btn')
+const createAccountBtn = document.getElementById('create-account-btn')
+
+const emailInput = document.getElementById("email-input")
+const passwordInput = document.getElementById("password-input")
+
+const errorMessage = document.getElementById("error-message")
+
+/* == Logged in elements == */
+const signOutBtn = document.getElementById('sign-out-btn')
+
+const userProfilePicture = document.getElementById('user-profile-picture')
+const userName = document.getElementById("user-name")
+
+const calendarModal = document.getElementById('calendar-modal')
+
+const habitsList = document.getElementById('habits') // Habit list element -> Rename habitListEl
+const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
+const warningModal = document.getElementById('warning-modal')
+const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
+const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
+
+/* == Habit elements == */
+const addHabitButton = document.getElementById('add-habit')
+const habitForm = document.getElementById('habit-form')
+const habitNameInput = document.getElementById('habit-name')
+const habitFrequencyInput = document.getElementById('habit-frequency')
+const habitTrackingInput = document.getElementById('habit-tracking')
+const habitDetailsInput = document.getElementById('habit-details')
+const colorBtns = document.getElementsByClassName("color-btn")
 
 
-// ********** EVENT LISTENERS **********
+/* ========== FUNCTIONS ========== */
+/* == Habit functions == */
+function clearAll(element) {
+    element.innerHTML = ''
+}
 
-/* Logged out */
-signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
-signInBtn.addEventListener('click', authSignInWithEmail)
-createAccountBtn.addEventListener('click', authCreateAccountWithEmail)
-
-/* Logged in */
-signOutBtn.addEventListener("click", authSignOut)
-
-// Delete All button
-deleteAllHabitsBtn.addEventListener('click', function(){
-    // Show warning modal
-    if (habitList.length != 0){
-        warningModal.style.display = 'flex'
+// Render habits to screen
+function renderHabits(){
+    for (let habit of habitList){
+        renderHabit(habit)
     }
-})
+}
 
-// Close warning module button
-closeWarningModalBtn.addEventListener('click', function(){
-    // Hide warning modal
-    warningModal.style.display = 'none'
-})
+function renderHabit(habit) {
+    // Pick color from colorState
+    const colorState = habit.colorState
+    const color = colorState === 1 ? "pink" : 
+                    colorState === 2 ? "blue" :
+                    colorState === 3 ? "orange" :
+                    colorState === 4 ? "white" :
+                    "black"
 
-// Confirm delete all
-confirmDeleteAllBtn.addEventListener('click', function(){
-    // Hide warning modal
-    warningModal.style.display = 'none'
-    clearHabitsList()
-    renderCalendar()
-})
+    const habitInnerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
 
+    habitsList.innerHTML += `
+        <li class="habit ${color}">
+            ${habitInnerHTML}
+        </li>
+    `
+}
 
+/* == Calendar functions == */
 // Function to render the calendar
 function renderCalendar() {
     let firstDayOfMonth = new Date(currYear, currMonth, 1).getDay(), // Get first day of month
@@ -236,21 +201,6 @@ function getLiTagHTML(id, isToday, day, checkdate){
     `
 }
 
-// Previous and Next calendar icons
-prevNextIcon.forEach(icon => {
-    icon.addEventListener('click', () => {
-        currMonth = icon.id === 'prev' ? currMonth - 1 : currMonth + 1
-
-        if(currMonth < 0 || currMonth > 11) {
-            date = new Date(currYear, currMonth)
-            currYear = date.getFullYear() // updating current year with new date year
-            currMonth = date.getMonth() // updating current month with new date month
-        }
-
-        renderCalendar()
-    })
-})
-
 // Function to render calendar modal
 function renderCalendarModal(date){
     const calendarModalHeaderDate = document.getElementById('calendar-modal-header-date')
@@ -263,9 +213,62 @@ function renderCalendarModal(date){
     calendarModalHeaderDate.innerText = `${mnt} ${dt}, ${yr}`
 }
 
+/* ========== MAIN CODE ========== */
+// Fetch db and render calendar / habits
+fetchOnceAndRenderHabitsFromDB()
 
-/* ========== NEW HABITS ========== */
-/* === Event listeners === */
+
+/* ========== EVENT LISTENERS ========== */
+
+/* Logged out */
+signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
+signInBtn.addEventListener('click', authSignInWithEmail)
+createAccountBtn.addEventListener('click', authCreateAccountWithEmail)
+
+/* Logged in */
+signOutBtn.addEventListener("click", authSignOut)
+
+// Delete All button
+deleteAllHabitsBtn.addEventListener('click', function(){
+    // Show warning modal
+    if (habitList.length != 0){
+        warningModal.style.display = 'flex'
+    }
+})
+
+// Close warning module button
+closeWarningModalBtn.addEventListener('click', function(){
+    // Hide warning modal
+    warningModal.style.display = 'none'
+})
+
+// Confirm delete all
+confirmDeleteAllBtn.addEventListener('click', function(){
+    // Hide warning modal
+    warningModal.style.display = 'none'
+    clearAll(HabitsList)
+    renderCalendar()
+})
+
+
+// Add event listeners to Previous and Next calendar icons
+prevNextIcon.forEach(icon => {
+    icon.addEventListener('click', () => {
+        currMonth = icon.id === 'prev' ? currMonth - 1 : currMonth + 1
+
+        if(currMonth < 0 || currMonth > 11) {
+            date = new Date(currYear, currMonth)
+            currYear = date.getFullYear() // updating current year with new date year
+            currMonth = date.getMonth() // updating current month with new date month
+        }
+
+        // Update calendar
+        renderCalendar()
+    })
+})
+
+
+/* == New habits event listeners == */
 
 // Show the form when the + Add Habit button is clicked
 addHabitButton.addEventListener('click', () => {
@@ -296,6 +299,7 @@ habitForm.addEventListener('submit', (event) => {
         resetAllColorBtns(colorBtns)
         habitForm.style.display = "none"
     }
+    fetchOnceAndRenderHabitsFromDB()
 })
 
 /* === State === */
@@ -307,16 +311,7 @@ let colorState = 0
 // Delete habits
 document.addEventListener('click', function(event){
     if (event.target.classList.contains('delete-btn')){
-        // find habit name from id
-        const habitName = event.target.id.slice(7)
-        // Make list of habit names
-        const habitNamesArr = habitList.map(habit => habit.habitName)
-        // Find index of habit name
-        const index = habitNamesArr.indexOf(habitName)
-        // Delete habit from habit list
-        habitList.splice(index, 1)
-        renderCalendar()
-        renderHabits()
+        // Delete habit
     }
 })
 
@@ -464,7 +459,7 @@ showLoggedOutView()
 function authSignInWithGoogle() {
     signInWithPopup(auth, provider)
         .then((result) => {
-            console.log('Signed in with Google')
+            // console.log('Signed in with Google')
         }).catch((error) => {
             console.error(error.message)
             errorMessage.innerText = error.message
@@ -534,18 +529,18 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
             await updateDoc(habitRef, {
                 habitId: docRef.id
             })
-          
-          console.log("Document written with ID: ", docRef.id)
+
     } catch (error) {
         console.error(error.message)
     }
 }
 
 async function fetchOnceAndRenderHabitsFromDB() {
+    clearAll(habitsList)
+
     const querySnapshot = await getDocs(collection(db, "habits"))
+    habitList = []
     querySnapshot.forEach((doc) => {
-        //console.log(doc.id, " => ", doc.data())
-        const stringToLog = `${doc.id}: ${doc.data().habitName}`
         habitList.push(doc.data())
     })
     renderCalendar()
