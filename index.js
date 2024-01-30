@@ -10,8 +10,10 @@ import { getAuth,
     signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
 import { getFirestore, 
     collection,
+    doc,
     addDoc,
     getDocs,
+    updateDoc,
     serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
 /* === Firebase Setup === */
@@ -87,10 +89,17 @@ function renderHabits(){
     // Reset habits list to empty element
     habitsList.innerHTML = ''
     for (let habit of habitList){
+        // Pick color from colorState
+        const colorState = habit.colorState
+        const color = colorState === 1 ? "pink" : 
+                        colorState === 2 ? "blue" :
+                        colorState === 3 ? "orange" :
+                        colorState === 4 ? "white" :
+                        "black"
         // Create element and render to screen
         const listItem = document.createElement('li')
         listItem.classList.add('habit') // Add the habit class for general styling
-        //listItem.classList.add(`${habit.color}`) // Add color class for specific styling
+        listItem.classList.add(`${color}`) // Add color class for specific styling
         listItem.innerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
         habitsList.appendChild(listItem)
     }
@@ -112,10 +121,9 @@ const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 
 
 
 // Run app
-// Fetch db
+// Fetch db and render calendar / habits
 fetchOnceAndRenderHabitsFromDB()
-// Render calendar to screen
-renderCalendar()
+
 
 // ********** EVENT LISTENERS **********
 
@@ -165,41 +173,14 @@ function renderCalendar() {
         const month = months[new Date(currYear, currMonth, 1).getMonth()]
         const year = new Date(currYear, currMonth, 1).getFullYear()
         const checkdate = `${day}${month}${year}`
-        const active = 'inactive'
+        const isToday = "inactive"
         const id = `p${day}`
-        let pinkTick = ""
-        let blueTick = ""
-        let orangeTick = ""
 
-        if (habitList.length != 0){
-            // Determine if habits are done or not
-            // pink habit:
-            habitList.forEach(habit => {
-                if (habit.color === 'pink'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        pinkTick = 'tick-pink'
-                    }
-                } else if (habit.color === 'blue'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        blueTick = 'tick-blue'
-                    }
-                } else if (habit.color === 'orange'){
-                    // If date is in habit.doneDates, show pink tick
-                    if (habit.doneDates.includes(checkdate)){
-                        orangeTick = 'tick-orange'
-                    }
-                }
-            })
-        }
-
-
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
     for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
-        let active = i === date.getDate() && currMonth === new Date().getMonth()
+        const isToday = i === date.getDate() && currMonth === new Date().getMonth()
                         && currYear === new Date().getFullYear() ? "active" : ""
 
         // Get the date
@@ -209,51 +190,17 @@ function renderCalendar() {
         const checkdate = `${day}${month}${year}`
         const id = `c${day}`
 
-        // Determine if habits are done or not
-        // pink habit:
-        let pinkTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'pink'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    pinkTick = 'tick-pink'
-                }
-            }
-        }
-
-        // Blue habit:
-        let blueTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'blue'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    blueTick = 'tick-blue'
-                }
-            }
-        }
-
-        // Orange habit:
-        let orangeTick = ''
-        for (let habit of habitList){
-            if (habit.color === 'orange'){
-                // If date is in habit.doneDates, show pink tick
-                if (habit.doneDates.includes(checkdate)){
-                    orangeTick = 'tick-orange'
-                }
-            }
-        }
-
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
     for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
         const day = i - lastDayOfMonth + 1
+        const month = months[new Date(currYear, currMonth, 1).getMonth()]
+        const year = new Date(currYear, currMonth, 1).getFullYear()
         const id = `n${day}`
-        const active = 'inactive'
-        const pinkTick = ''
-        const blueTick = ''
-        const orangeTick = ''
-        liTag += getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick)
+        const isToday = "inactive"
+        const checkdate = `${day}${month}${year}`
+        liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
     currentDate.innerText = `${months[currMonth]}  ${currYear}`
@@ -261,14 +208,29 @@ function renderCalendar() {
 }
 
 // Function to get HTML for calendar list item
-function getLiTagHTML(id, active, day, pinkTick, blueTick, orangeTick){
+function getLiTagHTML(id, isToday, day, checkdate){
+    let ticksHTML = ''
+    for (let habit of habitList) {
+
+        let inactive = 'tick-inactive'
+        if (habit.doneDates.includes(checkdate)) {
+            inactive = ''
+        }
+
+        const colorState = habit.colorState
+        const color = colorState === 1 ? "pink" : 
+                        colorState === 2 ? "blue" :
+                        colorState === 3 ? "orange" :
+                        colorState === 4 ? "white" :
+                        "black"
+        ticksHTML += `<div class="tick tick-${color} ${inactive}"></div>`
+    }
+
     return `
-        <li id="${id}" class="date-li ${active}">
+        <li id="${id}" class="date-li ${isToday}">
             <div class="date-wrapper">${day}</div>
             <div class="ticks">
-                <div class="tick ${pinkTick}"></div>
-                <div class="tick ${blueTick}"></div>
-                <div class="tick ${orangeTick}"></div>
+                ${ticksHTML}
             </div>
         </li>
     `
@@ -334,17 +296,6 @@ habitForm.addEventListener('submit', (event) => {
         resetAllColorBtns(colorBtns)
         habitForm.style.display = "none"
     }
-
-    
-
-    // Check if habit exists
-    // if does not exist 
-        // Reset input field
-        // Reset text area
-        // Hide the form again
-    // else
-        // Show exists error
-
 })
 
 /* === State === */
@@ -352,38 +303,6 @@ habitForm.addEventListener('submit', (event) => {
 let colorState = 0
 
 /* === Functions === */
-
-// Function to add a habit to the list
-function addHabit(habitName, frequency, tracking, details) {
-    let colorList = [0, 0, 0] // pink, blue, orange
-
-    // Check for existing habits and add to color list
-    for (let habit of habitsList.children) {
-        if (habit.classList.contains('pink')) {
-            colorList[0] = 1
-        }
-        if (habit.classList.contains('blue')) {
-            colorList[1] = 1
-        }
-        if (habit.classList.contains('orange')) {
-            colorList[2] = 1
-        }
-    }
-
-    // set color
-    let color = ''
-    if (colorList[0] === 0) {
-        color = 'pink'
-    }
-    else if (colorList[1] === 0) {
-        color = 'blue'
-    }
-    else if (colorList[2] === 0) {
-        color = 'orange'
-    }
-
-
-}
 
 // Delete habits
 document.addEventListener('click', function(event){
@@ -402,7 +321,7 @@ document.addEventListener('click', function(event){
 })
 
 // Document event listeners
-document.addEventListener('click', function(event){
+document.addEventListener('click', async function(event){
     // Calendar click events
     // Show calendar modal when clicking on a day
     if (event.target.classList.contains('date-li')){
@@ -438,6 +357,8 @@ document.addEventListener('click', function(event){
         for (let habit of habitList){
             if (habit.habitName === habitName){
 
+                const doneDates = habit.doneDates
+
                 // If date doesn't exist, push date to doneDates
                 if (habit.doneDates.slice(-1) != date){
                     // If tracking is number
@@ -446,7 +367,13 @@ document.addEventListener('click', function(event){
                         numberInput.value = ''
                     }
                     // Push date and render
-                    habit.doneDates.push(date)
+                    doneDates.push(date)
+
+                    const habitRef = doc(db, "habits", `${habit.habitId}`)
+                    // Set the "capital" field of the city 'DC'
+                    await updateDoc(habitRef, {
+                        doneDates: doneDates
+                    })
                     renderCalendar()
                 }
             }
@@ -588,6 +515,7 @@ function authSignOut() {
 async function addHabitToDB(habitName, frequency, tracking, details, user) {
     try {
         const docRef = await addDoc(collection(db, "habits"), {
+            habitId : '',
             habitName: habitName,
             uid: user.uid,
             timeAdded: serverTimestamp(),
@@ -600,6 +528,13 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
             timestamps: [],
             durations: []
           })
+
+          // Set habitId
+          const habitRef = doc(db, "habits", `${docRef.id}`);
+            await updateDoc(habitRef, {
+                habitId: docRef.id
+            })
+          
           console.log("Document written with ID: ", docRef.id)
     } catch (error) {
         console.error(error.message)
@@ -613,6 +548,7 @@ async function fetchOnceAndRenderHabitsFromDB() {
         const stringToLog = `${doc.id}: ${doc.data().habitName}`
         habitList.push(doc.data())
     })
+    renderCalendar()
     renderHabits()
 }
 
