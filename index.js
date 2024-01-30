@@ -8,6 +8,10 @@ import { getAuth,
     onAuthStateChanged,
     GoogleAuthProvider,
     signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
+import { getFirestore, 
+    doc, 
+    setDoc, 
+    serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
 /* === Firebase Setup === */
 const firebaseConfig = {
@@ -22,10 +26,11 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
-
 const provider = new GoogleAuthProvider();
-
 const analytics = getAnalytics(app)
+const db = getFirestore(app);
+
+console.log(db)
 
 // Variables
 let habitList = []
@@ -59,6 +64,14 @@ const deleteAllHabitsBtn = document.getElementById('delete-all-habits-btn')
 const warningModal = document.getElementById('warning-modal')
 const closeWarningModalBtn = document.getElementById('close-warning-modal-btn')
 const confirmDeleteAllBtn = document.getElementById('confirm-delete-all-btn')
+
+// Habit elements
+const addHabitButton = document.getElementById('add-habit')
+const habitForm = document.getElementById('habit-form')
+const habitNameInput = document.getElementById('habit-name')
+const habitFrequencyInput = document.getElementById('habit-frequency')
+const habitTrackingInput = document.getElementById('habit-tracking')
+const habitDetailsInput = document.getElementById('habit-details')
 
 
 // ********** FUNCTIONS **********
@@ -314,111 +327,79 @@ function renderCalendarModal(date){
 }
 
 
-// ********** NEW HABITS **********
+/* ========== NEW HABITS ========== */
+/* === Event listeners === */
 
-// Add event listeners to document
-document.addEventListener('DOMContentLoaded', () => {
-    const addHabitButton = document.getElementById('add-habit')
-    const habitForm = document.getElementById('habit-form')
-    const habitNameInput = document.getElementById('habit-name')
-    const habitFrequencyInput = document.getElementById('habit-frequency')
-    const habitTrackingInput = document.getElementById('habit-tracking')
-    const habitDetailsInput = document.getElementById('habit-details')
+// Show the form when the + Add Habit button is clicked
+addHabitButton.addEventListener('click', () => {
+    if (JSON.parse(localStorage.getItem('habitList')).length < 3){
+        habitForm.style.display = 'block'
+    } else {
+        // Show max habits message
+        let maxMessage = document.getElementById('max-message')
+        maxMessage.style.display = 'inline'
+        setTimeout(() => {
+            maxMessage.style.display = 'none'
+        }, 3000)
+    }
+})
 
-    // Function to add a habit to the list
-    function addHabit(habitName, frequency, tracking, details) {
-        let colorList = [0, 0, 0] // pink, blue, orange
+// Handle the form submission (save habit)
+habitForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    
+    const habitName = habitNameInput.value.trim().toLowerCase()
+    const frequency = habitFrequencyInput.value.trim().toLowerCase()
+    const tracking = habitTrackingInput.value.trim().toLowerCase()
+    const details = habitDetailsInput.value
+    const user = auth.currentUser
 
-        // Check for existing habits and add to color list
-        for (let habit of habitsList.children) {
-            if (habit.classList.contains('pink')) {
-                colorList[0] = 1
-            }
-            if (habit.classList.contains('blue')) {
-                colorList[1] = 1
-            }
-            if (habit.classList.contains('orange')) {
-                colorList[2] = 1
-            }
+    addHabitToDB(habitName, frequency, tracking, details, user)
+
+    // Check if habit exists
+    // if does not exist 
+        // Reset input field
+        // Reset text area
+        // Hide the form again
+    habitForm.style.display = "none"
+    // else
+        // Show exists error
+
+})
+
+/* === Functions === */
+
+// Function to add a habit to the list
+function addHabit(habitName, frequency, tracking, details) {
+    let colorList = [0, 0, 0] // pink, blue, orange
+
+    // Check for existing habits and add to color list
+    for (let habit of habitsList.children) {
+        if (habit.classList.contains('pink')) {
+            colorList[0] = 1
         }
-
-        // set color
-        let color = ''
-        if (colorList[0] === 0) {
-            color = 'pink'
+        if (habit.classList.contains('blue')) {
+            colorList[1] = 1
         }
-        else if (colorList[1] === 0) {
-            color = 'blue'
+        if (habit.classList.contains('orange')) {
+            colorList[2] = 1
         }
-        else if (colorList[2] === 0) {
-            color = 'orange'
-        }
-
-        // Create element and render to screen
-        const listItem = document.createElement('li')
-        listItem.classList.add('habit') // Add the habit class for general styling
-        listItem.classList.add(`${color}`) // Add color class for specific styling
-        listItem.innerHTML = getHabitHTML(habitName, frequency, tracking, details)
-        habitsList.appendChild(listItem)
-
-
-        // Save habit to Local Storage
-        habitList.push({
-            habitName: `${habitName}`,
-            frequency: `${frequency}`,
-            tracking: `${tracking}`,
-            details: `${details}`,
-            color: `${color}`,
-            doneDates: [],
-            numbers: []
-        })
-        setLocalStorage()
     }
 
-    // Show the form when the + New Habit button is clicked
-    addHabitButton.addEventListener('click', () => {
-        if (JSON.parse(localStorage.getItem('habitList')).length < 3){
-            habitForm.style.display = 'block'
-        } else {
-            // Show max habits message
-            let maxMessage = document.getElementById('max-message')
-            maxMessage.style.display = 'inline'
-            setTimeout(() => {
-                maxMessage.style.display = 'none'
-            }, 3000);
-        }
-    });
+    // set color
+    let color = ''
+    if (colorList[0] === 0) {
+        color = 'pink'
+    }
+    else if (colorList[1] === 0) {
+        color = 'blue'
+    }
+    else if (colorList[2] === 0) {
+        color = 'orange'
+    }
 
-    // Handle the form submission
-    habitForm.addEventListener('submit', (event) => {
-        event.preventDefault()
-        const habitName = habitNameInput.value.trim().toLowerCase()
-        const frequency = habitFrequencyInput.value.trim().toLowerCase()
-        const tracking = habitTrackingInput.value.trim().toLowerCase()
-        const details = habitDetailsInput.value
 
-        // Check if habit exists
-        const habitNames = habitList.map(function(habit){
-            return habit.habitName
-        })
-        if (!habitNames.includes(habitName)){
-            addHabit(habitName, frequency, tracking, details)
-            habitNameInput.value = '' // Reset input field
-            habitDetailsInput.value = '' // Reset text area
-            habitForm.style.display = 'none' // Hide the form again
-        } else {
-            // Show exists message
-            let existsMessage = document.getElementById('exists-message')
-            existsMessage.style.display = 'inline'
-            setTimeout(() => {
-                existsMessage.style.display = 'none'
-            }, 3000);
-        }
-    });
-});
-
-// Set copyright year
-document.getElementById("current-year").innerText = currYear
+}
 
 // Delete habits
 document.addEventListener('click', function(event){
@@ -553,6 +534,10 @@ function getHabitHTML(habitName, frequency, tracking, details){
     `
 }
 
+// Footer
+// Set copyright year
+document.getElementById("current-year").innerText = currYear
+
 
 /* === Main Code === */
 
@@ -621,6 +606,26 @@ function authSignOut() {
         })
 }
 
+/* = Functions - Firebase - Cloud Firestore = */
+
+async function addHabitToDB(habitName, frequency, tracking, details, user) {
+    try {
+        await setDoc(doc(db, "habits", "habit01"), {
+            habitName: habitName,
+            uid: user.uid,
+            timeAdded: serverTimestamp(),
+            frequency: frequency,
+            tracking: tracking,
+            details: details,
+            doneDates: [],
+            numbers: [],
+            timestamps: [],
+            durations: []
+          })
+    } catch (error) {
+        console.error(error.message)
+    }
+}
 
 /* == Functions - UI Functions == */
 
