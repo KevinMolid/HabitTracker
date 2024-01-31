@@ -7,7 +7,8 @@ import { getAuth,
     signOut,
     onAuthStateChanged,
     GoogleAuthProvider,
-    signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
+    signInWithPopup,
+    updateProfile  } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-auth.js"
 import { getFirestore, 
     collection,
     doc,
@@ -70,8 +71,15 @@ const errorMessage = document.getElementById("error-message")
 /* == Logged in elements == */
 const signOutBtn = document.getElementById('sign-out-btn')
 
+const userSection = document.getElementById('user-section')
 const userProfilePicture = document.getElementById('user-profile-picture')
 const userName = document.getElementById("user-name")
+const userEmail = document.getElementById("user-email")
+
+const userSectionEdit = document.getElementById('user-section-edit')
+const displayNameInput = document.getElementById('display-name-input')
+const photoUrlInput = document.getElementById('photo-url-input')
+const updateProfileBtn = document.getElementById('update-profile-btn')
 
 const calendarModal = document.getElementById('calendar-modal')
 
@@ -220,13 +228,21 @@ fetchOnceAndRenderHabitsFromDB()
 
 /* ========== EVENT LISTENERS ========== */
 
-/* Logged out */
+/* == Logged out view == */
 signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
 signInBtn.addEventListener('click', authSignInWithEmail)
 createAccountBtn.addEventListener('click', authCreateAccountWithEmail)
 
-/* Logged in */
+/* == Logged == in view */
 signOutBtn.addEventListener("click", authSignOut)
+
+userSection.addEventListener('click', function(){
+    toggleBlockElement(userSectionEdit)
+})
+
+updateProfileBtn.addEventListener('click', function(){
+    authUpdateProfile()
+})
 
 // Delete All button
 deleteAllHabitsBtn.addEventListener('click', function(){
@@ -306,7 +322,8 @@ habitForm.addEventListener('submit', (event) => {
 
 let colorState = 0
 
-/* === Functions === */
+/* === Element Listeners === */
+
 
 // Delete habits
 document.addEventListener('click', function(event){
@@ -444,6 +461,7 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         showProfilePicture(userProfilePicture, user)
         showUserName(userName, user)
+        showUserEmail(userEmail, user)
         showLoggedInView()
     } else {
         showLoggedOutView()
@@ -503,6 +521,22 @@ function authSignOut() {
         }).catch((error) => {
             console.error(error.message)
         })
+}
+
+function authUpdateProfile() {
+    const newDisplayName = displayNameInput.value
+    const newPhotoUrl = photoUrlInput.value
+
+    updateProfile(auth.currentUser, {
+        displayName: newDisplayName, 
+        photoURL: newPhotoUrl
+    }).then(() => {
+        showProfilePicture(userProfilePicture, auth.currentUser)
+        showUserName(userName, auth.currentUser)
+        toggleBlockElement(userSectionEdit)
+    }).catch((error) => {
+        console.error(error.message)
+    })
 }
 
 /* = Functions - Firebase - Cloud Firestore = */
@@ -567,6 +601,15 @@ function hideView(view) {
     view.style.display = "none"
 }
 
+function showFlexElement(element) {
+    element.style.display = 'flex'
+}
+
+function toggleBlockElement(element) {
+    element.classList.toggle('showBlock')
+    element.classList.toggle('hide')
+}
+
 function clearInputField(field) {
 	field.value = ""
 }
@@ -592,6 +635,15 @@ function showUserName(element, user) {
         element.innerText = displayName
     } else {
         element.innerText = "New User"
+    }
+}
+
+function showUserEmail(element, user) {
+    const email = user.email;
+    if (email) {
+        element.innerText = email
+    } else {
+        element.innerText = "No email"
     }
 }
 
