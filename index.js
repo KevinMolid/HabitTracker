@@ -227,7 +227,8 @@ function createHabitDoneBtn(habit) {
     const button = document.createElement("button")
     button.textContent = "Done"
 
-    button.addEventListener("click", function() {
+    button.addEventListener("click", function(event) {
+        event.stopPropagation()
         pushDateToDoneDates(habit)
     })
     
