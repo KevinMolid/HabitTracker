@@ -24,6 +24,7 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
+    align-items: center;
     min-height: 100vh;
     user-select: none;
 }
@@ -31,6 +32,7 @@ body {
 /* Header */
 
 .main-header {
+  width: 100svw;
     background: #333;
     color: #fff;
     text-align: center;
@@ -176,23 +178,62 @@ main {
 /* === User Section === */
 
 .user-section {
+  margin: auto;
+  width: 350px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.8em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
+  padding: 0.5em 1em 0.5em 0;
+  border-radius: 5px;
+  position: relative;
 }
 
-.user-section > h2 {
+.user-section:hover {
+  background: #222;
+  cursor: pointer;
+}
+
+.user-section-text > h2 {
   font-size: 1rem;
+}
+
+.user-section-text > p {
+  color: #999;
 }
 
 .user-section img {
   width: 3.75em;
   height: 3.75em;
+  object-fit: cover;
   border-radius: 50%;
   border: none;
   background: #999;
+}
+
+.user-section-edit-icon {
+  position: absolute;
+  font-size: 1.2rem;
+  top: 0.5em;
+  right: 0.5em;
+  color: #999;
+  opacity: 0;
+}
+
+.user-section:hover > .user-section-edit-icon {
+  opacity: 1;
+}
+
+/* User edit */
+.user-section-edit {
+  padding: 20px;
+  background: #222;
+  margin-bottom: 0.5em;
+}
+
+.user-section-edit > .secondary-btn {
+  margin: 0;
 }
 
 /* === Calendar === */
@@ -540,7 +581,7 @@ form label {
     margin-bottom: 5px;
 }
 
-form input[type='text'],
+input[type='text'],
 form select {
     color: #fff;
     background: #333;
@@ -548,6 +589,7 @@ form select {
     padding: 8px;
     margin-bottom: 10px;
     border: none;
+    border-radius: 5px;
 }
 
 form textarea {
@@ -642,6 +684,18 @@ footer {
 }
 
 /* */
+.hide {
+  display: none
+}
+
+.showFlex {
+  display: flex
+}
+
+.showBlock {
+  display: block
+}
+
 .bold {
   font-weight: 600;
 }

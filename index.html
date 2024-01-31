@@ -81,9 +81,18 @@
         <main>
           <!-- User section -->
           <section>
-            <div class="user-section">
+            <div class="user-section" id="user-section">
               <img id="user-profile-picture">
-              <h2 id="user-name"></h2>
+              <div class="user-section-text">
+                <h2 id="user-name"><!-- username goes here --></h2>
+                <p id="user-email"><!-- email goes here --></p>
+              </div>
+              <i class="user-section-edit-icon fa-solid fa-pen-to-square"></i>
+            </div>
+            <div class="hide user-section-edit" id="user-section-edit">
+              <input id="display-name-input" type="text" placeholder="Display Name">
+              <input id="photo-url-input" type="text" placeholder="Profile Photo URL">
+              <button id="update-profile-btn" class="secondary-btn">Update profile</button>
             </div>
           </section>
 
