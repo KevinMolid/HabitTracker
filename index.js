@@ -140,11 +140,12 @@ function renderCalendar() {
 
     let liTag = ""
 
-    for (let i = firstDayOfMonth; i > 0; i--) { // creating li of previous month last days
+    // creating li of previous month last days
+    for (let i = firstDayOfMonth; i > 0; i--) { 
         // Get the date
         const day = lastDateOfLastMonth -i + 1
-        const month = months[new Date(currYear, currMonth, 1).getMonth()]
-        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const month = months[new Date(currYear, currMonth-1, 1).getMonth()]
+        const year = new Date(currYear, currMonth-1, 1).getFullYear()
         const checkdate = `${day}${month}${year}`
         const isToday = "inactive"
         const id = `p${day}`
@@ -152,8 +153,9 @@ function renderCalendar() {
         liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
-    for (let i = 1; i <= lastDateOfMonth; i++) { // creating li of all days of current month
-        const isToday = i === date.getDate() && currMonth === new Date().getMonth()
+    // creating li of all days of current month
+    for (let i = 1; i <= lastDateOfMonth; i++) { 
+        const isToday = i === new Date().getDate() && currMonth === new Date().getMonth()
                         && currYear === new Date().getFullYear() ? "active" : ""
 
         // Get the date
@@ -166,13 +168,15 @@ function renderCalendar() {
         liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
-    for (let i = lastDayOfMonth; i < 6; i++) { // creating li of next month first days
+    // creating li of next month first days
+    for (let i = lastDayOfMonth; i < 6; i++) { 
         const day = i - lastDayOfMonth + 1
-        const month = months[new Date(currYear, currMonth, 1).getMonth()]
-        const year = new Date(currYear, currMonth, 1).getFullYear()
+        const month = months[new Date(currYear, currMonth+1, 1).getMonth()]
+        const year = new Date(currYear, currMonth+1, 1).getFullYear()
         const id = `n${day}`
         const isToday = "inactive"
         const checkdate = `${day}${month}${year}`
+        console.log(checkdate)
         liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
