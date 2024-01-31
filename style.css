@@ -1,10 +1,14 @@
 :root {
   --pink: #e215ef;
-  --pink-hover: #ce16da;
+  --pink-hover: #cb13d7;
   --blue: #15afef;
-  --blue-hover: #16a1da;
+  --blue-hover: #139dd6;
   --orange: #ef7215;
-  --orange-hover: #da6a16;
+  --orange-hover: #d76613;
+  --green: #24d84e;
+  --green-hover: #20c246;
+  --purple: #8d4cf8;
+  --purple-hover: #7f44df;
 }
 
 
@@ -90,7 +94,7 @@ nav {
 
 .menu-icon:hover {
   background-color: #333;
-  color: white;
+  color: #FFF;
 }
 
 /* Logged out view */
@@ -335,6 +339,14 @@ main {
   background: var(--orange);
 }
 
+.tick-green {
+  background: var(--green);
+}
+
+.tick-purple {
+  background: var(--purple);
+}
+
 .tick-inactive {
   background: #444444;
 }
@@ -519,20 +531,20 @@ ul {
   background: var(--orange-hover);
 }
 
-.white button {
-  background: white;
+.green button {
+  background: var(--green);
 }
 
-.white button:hover {
-  background: #eeeeee;
+.green button:hover {
+  background: var(--green-hover);
 }
 
-.black button {
-  background: black;
+.purple button {
+  background: var(--purple);
 }
 
-.black button:hover {
-  background: #111111;
+.purple button:hover {
+  background: var(--purple-hover);
 }
 
 /* Buttons */
@@ -630,11 +642,11 @@ form textarea {
 }
 
 #color-4 {
-  background-color: white;
+  background-color: var(--green);
 }
 
 #color-5 {
-  background-color: black;
+  background-color: var(--purple);
 }
 
 .selected-color {

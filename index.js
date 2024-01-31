@@ -118,8 +118,8 @@ function renderHabit(habit) {
     const color = colorState === 1 ? "pink" : 
                     colorState === 2 ? "blue" :
                     colorState === 3 ? "orange" :
-                    colorState === 4 ? "white" :
-                    "black"
+                    colorState === 4 ? "green" :
+                    "purple"
 
     const habitInnerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
 
@@ -176,7 +176,6 @@ function renderCalendar() {
         const id = `n${day}`
         const isToday = "inactive"
         const checkdate = `${day}${month}${year}`
-        console.log(checkdate)
         liTag += getLiTagHTML(id, isToday, day, checkdate)
     }
 
@@ -198,8 +197,8 @@ function getLiTagHTML(id, isToday, day, checkdate){
         const color = colorState === 1 ? "pink" : 
                         colorState === 2 ? "blue" :
                         colorState === 3 ? "orange" :
-                        colorState === 4 ? "white" :
-                        "black"
+                        colorState === 4 ? "green" :
+                        "purple"
         ticksHTML += `<div class="tick tick-${color} ${inactive}"></div>`
     }
 
