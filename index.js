@@ -101,6 +101,13 @@ const colorBtns = document.getElementsByClassName("color-btn")
 
 /* ========== FUNCTIONS ========== */
 /* == Habit functions == */
+function replaceNewlinesWithBrTags(inputString) {
+    // Challenge: Use the replace method on inputString to replace newlines with break tags and return the result
+    return inputString.replace(/\n/g, "<br>")
+
+}
+
+
 function clearAll(element) {
     element.innerHTML = ''
 }
@@ -443,7 +450,7 @@ function getHabitHTML(habitName, frequency, tracking, details){
             </div>
             <div class="span-2">
                 <h4>Details</h4>
-                <p>${details}</p>
+                <p>${replaceNewlinesWithBrTags(details)}</p>
             </div>
             <div class="margin-top span-2">
                 <button id="edit-${habitName}" class="edit-btn">Edit</button>
