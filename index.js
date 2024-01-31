@@ -578,7 +578,9 @@ async function fetchOnceAndRenderHabitsFromDB() {
     const querySnapshot = await getDocs(collection(db, "habits"))
     habitList = []
     querySnapshot.forEach((doc) => {
-        habitList.push(doc.data())
+        if (doc.data().uid === auth.currentUser.uid) {
+            habitList.push(doc.data())
+        }
     })
     renderCalendar()
     renderHabits()
