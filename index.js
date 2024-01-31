@@ -15,7 +15,8 @@ import { getFirestore,
     addDoc,
     getDocs,
     updateDoc,
-    serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
+    deleteDoc,
+    serverTimestamp} from "https://www.gstatic.com/firebasejs/10.7.2/firebase-firestore.js"
 
 
 /* ========== FIREBASE SETUP ========== */
@@ -51,6 +52,7 @@ currMonth = date.getMonth()
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const colors = ['', 'pink', 'blue', 'orange', 'green', 'purple']
 
 
 /* ========== ELEMENTS ========== */
@@ -101,6 +103,12 @@ const colorBtns = document.getElementsByClassName("color-btn")
 
 /* ========== FUNCTIONS ========== */
 /* == Habit functions == */
+function replaceNewlinesWithBrTags(inputString) {
+    // Challenge: Use the replace method on inputString to replace newlines with break tags and return the result
+    return inputString.replace(/\n/g, "<br>")
+
+}
+
 function clearAll(element) {
     element.innerHTML = ''
 }
@@ -113,21 +121,184 @@ function renderHabits(){
 }
 
 function renderHabit(habit) {
-    // Pick color from colorState
-    const colorState = habit.colorState
-    const color = colorState === 1 ? "pink" : 
-                    colorState === 2 ? "blue" :
-                    colorState === 3 ? "orange" :
-                    colorState === 4 ? "green" :
-                    "purple"
+    const habitLi = document.createElement("li")
+    habitLi.className = `habit ${colors[habit.colorState]}`
+    const habitHeader = createHabitHeader(habit)
+    const habitBody = createHabitBody(habit)
 
-    const habitInnerHTML = getHabitHTML(habit.habitName, habit.frequency, habit.tracking, habit.details)
+    habitHeader.addEventListener('click', function() {
+        habitBody.classList.toggle('grid')
+    })
 
-    habitsList.innerHTML += `
-        <li class="habit ${color}">
-            ${habitInnerHTML}
-        </li>
-    `
+    habitLi.appendChild(habitHeader)
+    habitLi.appendChild(habitBody)
+
+    habitsList.appendChild(habitLi)
+}
+
+function createHabitHeader(habit) {
+    /*
+        <div class="habit-header">
+        </div>
+    */
+    const headerDiv = document.createElement("div")
+    headerDiv.className = "habit-header"
+    
+        /* 
+            <h3 class="habit-name">Sleep</h3>
+        */
+        const headerName = document.createElement("h3")
+        headerName.className = "habit-name"
+        headerName.textContent = habit.habitName
+        headerDiv.appendChild(headerName)
+        
+        /* 
+            <div>
+            </div>
+        */
+        const doneBtnWrapper = document.createElement("div")
+            /*
+                ${numberInput}
+                <button class="done-btn">Done</button>
+            */
+            doneBtnWrapper.appendChild(createHabitDoneBtn(habit))
+
+        headerDiv.appendChild(doneBtnWrapper)
+        
+    return headerDiv
+}
+
+function createHabitBody(habit) {
+    /*
+        <div class="habit-details">
+        <div>
+    */
+    const habitBody = document.createElement("div")
+    habitBody.className = "habit-details"
+        /*
+            <div>
+                <h4>Frequency</h4>
+                <p class="habit-frequency">${frequency}</p>
+            </div>
+        */
+        const frequencyDiv = document.createElement("div")
+            const frequencyHeading = document.createElement("h4")
+            frequencyHeading.innerText = 'Frequency'
+            frequencyDiv.appendChild(frequencyHeading)
+            const frequency = document.createElement("p")
+            frequency.innerText = habit.frequency
+            frequencyDiv.appendChild(frequency)
+        habitBody.appendChild(frequencyDiv)
+        /*
+            <div>
+                <h4>Tracking</h4>
+                <p class="habit-tracking">${tracking}</p>
+            </div>
+        */
+        const trackingDiv = document.createElement("div")
+            const trackingHeading = document.createElement("h4")
+            trackingHeading.innerText = 'Tracking'
+            trackingDiv.appendChild(trackingHeading)
+            const tracking = document.createElement("p")
+            tracking.innerText = habit.tracking
+            trackingDiv.appendChild(tracking)
+        habitBody.appendChild(trackingDiv)
+        /*
+            <div class="span-2">
+                <h4>Details</h4>
+                <p>${replaceNewlinesWithBrTags(details)}</p>
+            </div>
+        */
+        const detailsDiv = document.createElement("div")
+            const detailsHeading = document.createElement("h4")
+            detailsHeading.innerText = 'Details'
+            detailsDiv.appendChild(detailsHeading)
+            const details = document.createElement("p")
+            details.innerText = habit.details
+            detailsDiv.appendChild(details)
+        habitBody.appendChild(detailsDiv)
+
+        habitBody.appendChild(createHabitFooter(habit))
+    
+    return habitBody
+}
+
+function createHabitDoneBtn(habit) {
+    const button = document.createElement("button")
+    button.textContent = "Done"
+
+    button.addEventListener("click", function() {
+        pushDateToDoneDates(habit)
+    })
+    
+    return button
+}
+
+async function pushDateToDoneDates(habit) {
+    const date = getCurrentDate()
+    const doneDates = habit.doneDates
+    
+    // If date doesn't exist, push date to doneDates
+    if (doneDates.slice(-1) != date){
+        doneDates.push(date)
+    }
+
+    const habitRef = doc(db, "habits", habit.habitId)
+
+    await updateDoc(habitRef, {
+        doneDates: doneDates
+    })
+}
+
+function createHabitEditBtn(habit) {
+    const habitId = habit.uid
+    
+    /* 
+        <button class="edit-btn">Edit</button>
+    */
+    const button = document.createElement("button")
+    button.textContent = "Edit"
+    button.classList.add("edit-btn")
+    button.addEventListener("click", function() {
+        const newDetails = prompt("Edit the details", habit.details)
+        
+        if (newDetails) {
+            updatePostInDB(habitId, newDetails)
+        }
+    })
+    
+    return button
+}
+
+function createHabitDeleteBtn(habit) {
+    const habitId = habit.uid
+    /* 
+        <button class="delete-btn">Delete</button>
+    */
+    const button = document.createElement('button')
+    button.textContent = 'Delete'
+    button.className = "delete-btn"
+    button.addEventListener('click', function() {
+        console.log("Delete habit")
+        //deletePostFromDB(habitId)
+    })
+    return button
+}
+
+function createHabitFooter(habit) {
+    /* 
+        <div class="margin-top span-2">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+        </div>
+    */
+    const footerDiv = document.createElement("div")
+    footerDiv.className = "margin-top span-2"
+    
+    footerDiv.appendChild(createHabitEditBtn(habit))
+    footerDiv.appendChild(createHabitDeleteBtn(habit))
+    
+    return footerDiv
 }
 
 /* == Calendar functions == */
@@ -222,6 +393,16 @@ function renderCalendarModal(date){
     const yr = date.getFullYear()
     calendarModalHeaderDay.innerText = day
     calendarModalHeaderDate.innerText = `${mnt} ${dt}, ${yr}`
+}
+
+function getCurrentDate() {
+    const newDate = new Date()
+    const day = newDate.getDate()
+    const month = months[newDate.getMonth()]
+    const year = newDate.getFullYear()
+    const date = `${day}${month}${year}`
+
+    return date
 }
 
 /* ========== MAIN CODE ========== */
@@ -327,14 +508,6 @@ let colorState = 0
 
 /* === Element Listeners === */
 
-
-// Delete habits
-document.addEventListener('click', function(event){
-    if (event.target.classList.contains('delete-btn')){
-        // Delete habit
-    }
-})
-
 // Document event listeners
 document.addEventListener('click', async function(event){
     // Calendar click events
@@ -353,105 +526,7 @@ document.addEventListener('click', async function(event){
     else if (event.target.classList.contains('calendar-modal-header')){
         calendarModal.style.display = 'none'
     }
-
-    // Mark habit as done
-    else if (event.target.classList.contains('done-btn')){
-        // Set the date
-        const newDate = new Date()
-        const day = newDate.getDate()
-        const month = months[newDate.getMonth()]
-        const year = newDate.getFullYear()
-        const date = `${day}${month}${year}`
- 
-        // Add date to the habit objects doneDates array
-        const habitName = event.target.id.slice(5) // Get habit name
-
-        // Get the numberInput element if it exists
-        const numberInput = document.getElementById(`number-input-${habitName}`)
-
-        for (let habit of habitList){
-            if (habit.habitName === habitName){
-
-                const doneDates = habit.doneDates
-
-                // If date doesn't exist, push date to doneDates
-                if (habit.doneDates.slice(-1) != date){
-                    // If tracking is number
-                    if (numberInput){
-                        habit.numbers.push(numberInput.value)
-                        numberInput.value = ''
-                    }
-                    // Push date and render
-                    doneDates.push(date)
-
-                    const habitRef = doc(db, "habits", `${habit.habitId}`)
-                    // Set the "capital" field of the city 'DC'
-                    await updateDoc(habitRef, {
-                        doneDates: doneDates
-                    })
-                    renderCalendar()
-                }
-            }
-        }
-    }
-
-    // Expand habit details when clicking on the habit header or habit name
-    else if (event.target.classList.contains('habit-header')){
-        // get habit name
-        const habitName = event.target.id.slice(7)
-        // show details
-        const habitDetails = document.getElementById(`details-${habitName}`)
-        habitDetails.classList.toggle('grid')
-    } else if (event.target.classList.contains('habit-name')){
-        // get habit name
-        const habitName = event.target.id.slice(11)
-        // show details
-        const habitDetails = document.getElementById(`details-${habitName}`)
-        habitDetails.classList.toggle('grid')
-    }
-
 })
-
-
-/* Function to get habit element HTML */
-function getHabitHTML(habitName, frequency, tracking, details){
-    // Adding tracking mode elements
-    let numberInput = ''
-
-    if (tracking === 'number'){
-        numberInput = `
-            <input id="number-input-${habitName}" type="number" placeholder="Number">
-        `
-    }
-
-    return `
-        <div class="habit-header" id="header-${habitName}">
-            <h3 class="habit-name" id="habit-name-${habitName}">${habitName}</h3>
-            <div>
-                ${numberInput}
-                <button id="done-${habitName}" class="done-btn">Done</button>
-            </div>
-        </div>
-        <div class="habit-details" id="details-${habitName}">
-            <div>
-                <h4>Frequency</h4>
-                <p class="habit-frequency">${frequency}</p>
-            </div>
-            <div>
-                <h4>Tracking</h4>
-                <p class="habit-tracking">${tracking}</p>
-            </div>
-            <div class="span-2">
-                <h4>Details</h4>
-                <p>${details}</p>
-            </div>
-            <div class="margin-top span-2">
-                <button id="edit-${habitName}" class="edit-btn">Edit</button>
-                <button id="delete-${habitName}" class="delete-btn">Delete</button>
-            </div>
-        </div>
-    `
-}
 
 // Footer
 // Set copyright year
@@ -574,8 +649,9 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
 
 async function fetchOnceAndRenderHabitsFromDB() {
     clearAll(habitsList)
+    const habitsRef = collection(db, "habits")
 
-    const querySnapshot = await getDocs(collection(db, "habits"))
+    const querySnapshot = await getDocs(habitsRef)
     habitList = []
     querySnapshot.forEach((doc) => {
         if (doc.data().uid === auth.currentUser.uid) {
