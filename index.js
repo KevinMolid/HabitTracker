@@ -609,9 +609,11 @@ function authCreateAccountWithEmail() {
     })
 }
 
+// Log out
 function authSignOut() {
     signOut(auth)
         .then(() => {
+            navModal.style.display = 'none'
             showLoggedOutView()
         }).catch((error) => {
             console.error(error.message)
