@@ -506,8 +506,8 @@ habitForm.addEventListener('submit', (event) => {
     if (colorState) { // Ensuring color selection
         addHabitToDB(habitName, frequency, tracking, details, user)
         clearInputField(habitNameInput)
-        clearInputField(habitFrequencyInput)
-        clearInputField(habitTrackingInput)
+        habitFrequencyInput.value = 'daily'
+        habitTrackingInput.value = 'binary'
         clearInputField(habitDetailsInput)
         resetAllColorBtns(colorBtns)
         habitForm.style.display = "none"
