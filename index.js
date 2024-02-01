@@ -773,8 +773,8 @@ function changeColorAfterSelection(selectedColorBtnId, colorBtns) {
 
 function resetAllColorBtns(colorBtns) {
     for (let colorBtn of colorBtns) {
-        colorBtn.classList.remove("selected-emoji")
-        colorBtn.classList.remove("unselected-emoji")
+        colorBtn.classList.remove("selected-color")
+        colorBtn.classList.remove("unselected-color")
     }
     
     colorState = 0
