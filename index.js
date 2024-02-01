@@ -611,16 +611,18 @@ function authUpdateProfile() {
     const newDisplayName = displayNameInput.value
     const newPhotoUrl = photoUrlInput.value
 
-    updateProfile(auth.currentUser, {
-        displayName: newDisplayName, 
-        photoURL: newPhotoUrl
-    }).then(() => {
-        showProfilePicture(userProfilePicture, auth.currentUser)
-        showUserName(userName, auth.currentUser)
-        toggleBlockElement(userSectionEdit)
-    }).catch((error) => {
-        console.error(error.message)
-    })
+    if (newDisplayName) {
+        updateProfile(auth.currentUser, {
+            displayName: newDisplayName, 
+        }).then(() => {showUserName(userName, auth.currentUser)})
+    }
+    if (newPhotoUrl) {
+        updateProfile(auth.currentUser, {
+            photoURL: newPhotoUrl
+        }).then(() => {showProfilePicture(userProfilePicture, auth.currentUser)})
+    }
+    
+    toggleBlockElement(userSectionEdit)
 }
 
 /* = Functions - Firebase - Cloud Firestore = */
