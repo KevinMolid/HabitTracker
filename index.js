@@ -228,8 +228,7 @@ function createHabitDoneBtn(habit) {
     const button = document.createElement("button")
     button.textContent = "Done"
 
-    button.addEventListener("click", function(event) {
-        console.log('done button clicked')
+    button.addEventListener("click", function() {
         pushDateToDoneDates(habit)
         fetchOnceAndRenderHabitsFromDB()
     })
