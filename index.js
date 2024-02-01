@@ -412,10 +412,6 @@ function getCurrentDate() {
     return date
 }
 
-/* ========== MAIN CODE ========== */
-// Fetch db and render calendar / habits
-fetchOnceAndRenderHabitsFromDB()
-
 
 /* ========== EVENT LISTENERS ========== */
 
@@ -558,6 +554,7 @@ onAuthStateChanged(auth, (user) => {
         showUserName(userName, user)
         showUserEmail(userEmail, user)
         showLoggedInView()
+        fetchOnceAndRenderHabitsFromDB()
     } else {
         showLoggedOutView()
     }
