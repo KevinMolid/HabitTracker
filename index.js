@@ -609,9 +609,11 @@ function authCreateAccountWithEmail() {
     })
 }
 
+// Log out
 function authSignOut() {
     signOut(auth)
         .then(() => {
+            navModal.style.display = 'none'
             showLoggedOutView()
         }).catch((error) => {
             console.error(error.message)
@@ -667,6 +669,7 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
 }
 
 async function fetchOnceAndRenderHabitsFromDB() {
+    navModal.style.display = 'none'
     clearAll(habitsList)
     const habitsRef = collection(db, "habits")
 
