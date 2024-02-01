@@ -36,6 +36,8 @@ body {
     align-items: center;
     min-height: 100vh;
     user-select: none;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* Header */
@@ -111,7 +113,7 @@ nav {
 /* Nav-modal */
 .nav-modal {
   display: none; /* Flex */
-  width: 80vw;
+  width: 80svw;
   min-width: 310px;
   max-width: 500px;
   height: 100svh;
@@ -149,13 +151,9 @@ nav {
   padding: 0.5em 2em;
 }
 
-.buy-coffee-btn:hover {
-
-}
-
 /* Logged out view */
 .container {
-  width: 70vw;
+  width: 70svw;
   display: flex;
   flex-direction: column;
   justify-content: center;
