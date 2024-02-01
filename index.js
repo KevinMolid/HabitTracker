@@ -273,18 +273,22 @@ function createHabitEditBtn(habit) {
 }
 
 function createHabitDeleteBtn(habit) {
-    const habitId = habit.uid
     /* 
         <button class="delete-btn">Delete</button>
     */
     const button = document.createElement('button')
     button.textContent = 'Delete'
     button.className = "delete-btn"
-    button.addEventListener('click', function() {
-        console.log("Delete habit")
-        //deletePostFromDB(habitId)
+    button.addEventListener('click', function() {    
+        deleteHabitFromDB(habit)
     })
     return button
+}
+
+async function deleteHabitFromDB(habit) {
+    console.log("Deleting habit")
+    await deleteDoc(doc(db, "habits", habit.habitId))
+    fetchOnceAndRenderHabitsFromDB()
 }
 
 function createHabitFooter(habit) {
