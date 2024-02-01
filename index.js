@@ -123,12 +123,8 @@ function renderHabits(){
 function renderHabit(habit) {
     const habitLi = document.createElement("li")
     habitLi.className = `habit ${colors[habit.colorState]}`
-    const habitHeader = createHabitHeader(habit)
     const habitBody = createHabitBody(habit)
-
-    habitHeader.addEventListener('click', function() {
-        habitBody.classList.toggle('grid')
-    })
+    const habitHeader = createHabitHeader(habit, habitBody)
 
     habitLi.appendChild(habitHeader)
     habitLi.appendChild(habitBody)
@@ -136,7 +132,7 @@ function renderHabit(habit) {
     habitsList.appendChild(habitLi)
 }
 
-function createHabitHeader(habit) {
+function createHabitHeader(habit, habitBody) {
     /*
         <div class="habit-header">
         </div>
@@ -150,6 +146,11 @@ function createHabitHeader(habit) {
         const headerName = document.createElement("h3")
         headerName.className = "habit-name"
         headerName.textContent = habit.habitName
+
+        headerName.addEventListener('click', function() {
+            habitBody.classList.toggle('grid')
+        })
+
         headerDiv.appendChild(headerName)
         
         /* 
@@ -229,6 +230,7 @@ function createHabitDoneBtn(habit) {
 
     button.addEventListener("click", function() {
         pushDateToDoneDates(habit)
+        fetchOnceAndRenderHabitsFromDB()
     })
     
     return button

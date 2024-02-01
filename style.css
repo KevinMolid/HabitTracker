@@ -433,16 +433,23 @@ ul {
 
 .habit-header {
   width: 100%;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   gap: 8px;
   align-items: center;
   cursor: pointer;
-  padding: 0 1em;
+  padding-right: 1em;
   border-radius: 5px;
 }
 
-.habit-header:hover {
+.habit-name {
+  padding: 0.5em 1em;
+  height: 100%;
+  width: 100%;
+}
+
+.habit-name:hover {
   background: #292929;
 }
 
