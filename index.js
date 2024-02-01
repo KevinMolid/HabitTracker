@@ -669,6 +669,7 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
 }
 
 async function fetchOnceAndRenderHabitsFromDB() {
+    navModal.style.display = 'none'
     clearAll(habitsList)
     const habitsRef = collection(db, "habits")
 
