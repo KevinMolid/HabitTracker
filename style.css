@@ -20,6 +20,11 @@
     font-family: 'Montserrat', sans-serif;
 }
 
+/* Typography */
+a {
+  text-decoration: none;
+}
+
 /* Layout */
 
 body {
@@ -86,15 +91,66 @@ nav {
 }
 
 .menu-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5em;
+  min-width: 48px;
+  height: 48px;
   padding: 4px;
-  color: #999;
-  background-color: #333;
+  color: rgba(256, 256, 256, 0.7);
   font-size: 1.6rem;
+  background: none;
 }
 
 .menu-icon:hover {
-  background-color: #333;
   color: #FFF;
+  background: none;
+}
+
+/* Nav-modal */
+.nav-modal {
+  display: none; /* Flex */
+  width: 80vw;
+  min-width: 310px;
+  max-width: 500px;
+  height: 100svh;
+  background: var(--orange);
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  box-shadow: 0 0 40px #222222;
+  padding: 1em;
+}
+
+.nav-modal-close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.buy-coffee-wrapper {
+  padding: 2em 1.5em 1.5em;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.buy-coffee-wrapper > p {
+  color: rgba(256, 256, 256, 0.7);
+  margin-block: 0.8em;
+  line-height: 1.4;
+}
+
+.buy-coffee-btn {
+  font-size: 1.2rem;
+  background: #111;
+  color: #FFFFFF;
+  padding: 0.5em 2em;
+}
+
+.buy-coffee-btn:hover {
+  background: #222;
 }
 
 /* Logged out view */

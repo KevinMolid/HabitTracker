@@ -71,8 +71,15 @@ const passwordInput = document.getElementById("password-input")
 const errorMessage = document.getElementById("error-message")
 
 /* == Logged in elements == */
+/* Header */
+const navModalOpenBtn = document.getElementById('nav-modal-open-btn')
+
+/* Nav modal */
+const navModal = document.getElementById('nav-modal')
+const navModalCloseBtn = document.getElementById('nav-modal-close-btn')
 const signOutBtn = document.getElementById('sign-out-btn')
 
+/* User section */
 const userSection = document.getElementById('user-section')
 const userProfilePicture = document.getElementById('user-profile-picture')
 const userName = document.getElementById("user-name")
@@ -103,12 +110,6 @@ const colorBtns = document.getElementsByClassName("color-btn")
 
 /* ========== FUNCTIONS ========== */
 /* == Habit functions == */
-function replaceNewlinesWithBrTags(inputString) {
-    // Challenge: Use the replace method on inputString to replace newlines with break tags and return the result
-    return inputString.replace(/\n/g, "<br>")
-
-}
-
 function clearAll(element) {
     element.innerHTML = ''
 }
@@ -207,7 +208,7 @@ function createHabitBody(habit) {
         /*
             <div class="span-2">
                 <h4>Details</h4>
-                <p>${replaceNewlinesWithBrTags(details)}</p>
+                <p>${details}</p>
             </div>
         */
         const detailsDiv = document.createElement("div")
@@ -419,12 +420,22 @@ fetchOnceAndRenderHabitsFromDB()
 /* ========== EVENT LISTENERS ========== */
 
 /* == Logged out view == */
-signInWithGoogleBtn.addEventListener("click", authSignInWithGoogle)
+signInWithGoogleBtn.addEventListener('click', authSignInWithGoogle)
 signInBtn.addEventListener('click', authSignInWithEmail)
 createAccountBtn.addEventListener('click', authCreateAccountWithEmail)
 
-/* == Logged == in view */
-signOutBtn.addEventListener("click", authSignOut)
+/* == Logged in view == */
+/* Header */
+navModalOpenBtn.addEventListener('click', function(){
+    navModal.style.display = 'flex'
+})
+
+/* Nav modal */
+signOutBtn.addEventListener('click', authSignOut)
+
+navModalCloseBtn.addEventListener('click', function(){
+    navModal.style.display = 'none'
+})
 
 userSection.addEventListener('click', function(){
     toggleBlockElement(userSectionEdit)

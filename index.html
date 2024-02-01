@@ -68,14 +68,38 @@
             <h1 class="title">habitual</h1>
           </div>
           <nav>
-            <button class="menu-icon">
+            <button id="nav-modal-open-btn" class="menu-icon">
               <i class="fa-solid fa-bars"></i>
-            </button>
-            <button id="sign-out-btn" class="icon-btn menu-icon">
-              <i class="fa-solid fa-right-from-bracket"></i>
             </button>
           </nav>
         </header>
+
+        <!-- Navigation Modal -->
+        <nav class="nav-modal" id="nav-modal">
+          <button id="nav-modal-close-btn" class="menu-icon nav-modal-close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+
+          <ul>
+            <li class="buy-coffee-wrapper">
+              <h1>Do you like habitual?</h1>
+              <p>A lot of time and effort has been put into creating this app - All for free!</p>
+              <p>If you would like to support the project, the best way would be to click the link below, and buy me a coffee.</p> 
+              <a href="https://www.buymeacoffee.com/kevinmolid" target="_blank">
+                <button id="buy-coffee-btn" class="buy-coffee-btn">
+                  Buy me a coffee
+                  <i class="fa-solid fa-mug-hot"></i>
+                </button>
+              </a>
+            </li>
+            <li>
+              <button id="sign-out-btn" class="menu-icon">
+                Log out
+                <i class="fa-solid fa-right-from-bracket"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
   
         <!-- Main -->
         <main>
