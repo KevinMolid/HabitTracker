@@ -619,6 +619,7 @@ function authSignInWithEmail() {
 
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+        errorMessage.innerText = ''
         clearAuthFields()
         showLoggedInView()
     })
@@ -640,6 +641,7 @@ function authCreateAccountWithEmail() {
 
    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+            errorMessage.innerText = ''
             clearAuthFields()
             showLoggedInView()
         })
