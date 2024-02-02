@@ -208,6 +208,7 @@ function createHabitBody(habit) {
             frequencyHeading.innerText = 'Frequency'
             frequencyDiv.appendChild(frequencyHeading)
             const frequency = document.createElement("p")
+            frequency.className = 'habit-frequency'
             frequency.innerText = habit.frequency
             frequencyDiv.appendChild(frequency)
         habitBody.appendChild(frequencyDiv)
@@ -222,6 +223,7 @@ function createHabitBody(habit) {
             trackingHeading.innerText = 'Tracking'
             trackingDiv.appendChild(trackingHeading)
             const tracking = document.createElement("p")
+            tracking.className = 'habit-tracking'
             tracking.innerText = habit.tracking
             trackingDiv.appendChild(tracking)
         habitBody.appendChild(trackingDiv)

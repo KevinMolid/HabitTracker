@@ -557,7 +557,7 @@ ul {
   font-weight: 400;
 }
 
-.habit h3,
+.habit h3::first-letter,
 .habit-frequency,
 .habit-tracking {
   text-transform: capitalize;
