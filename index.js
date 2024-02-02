@@ -307,7 +307,6 @@ function createHabitDeleteBtn(habit) {
 }
 
 async function deleteHabitFromDB(habit) {
-    console.log("Deleting habit")
     await deleteDoc(doc(db, "habits", habit.habitId))
     fetchOnceAndRenderHabitsFromDB()
 }
@@ -604,9 +603,13 @@ function authSignInWithGoogle() {
     signInWithPopup(auth, provider)
         .then((result) => {
             // console.log('Signed in with Google')
+            errorMessage.innerText = ''
         }).catch((error) => {
-            console.error(error.message)
-            errorMessage.innerText = error.message
+            if (error.message === 'Firebase: Error (auth/unauthorized-domain).') {
+                errorMessage.innerText = "Can't sign in with google from this domain."
+            } else {
+                console.error(error.message)
+            }
         })
 }
 
@@ -616,13 +619,20 @@ function authSignInWithEmail() {
 
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
+        errorMessage.innerText = ''
         clearAuthFields()
         showLoggedInView()
     })
     .catch((error) => {
-        console.error(error.message)
-        errorMessage.innerText = error.message
-    })
+        if (error.message === 'Firebase: Error (auth/missing-password).') {
+            errorMessage.innerText = 'Password missing.'
+        } else if (error.message === 'Firebase: Error (auth/invalid-email).') {
+            errorMessage.innerText = 'Invalid Email.'
+        } else if (error.message === 'Firebase: Error (auth/invalid-credential).') {
+            errorMessage.innerText = 'Incorrect Email/Password.'
+        } else {
+            errorMessage.innerText = error.message
+        }})
 }
 
 function authCreateAccountWithEmail() {
@@ -631,13 +641,24 @@ function authCreateAccountWithEmail() {
 
    createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+            errorMessage.innerText = ''
             clearAuthFields()
             showLoggedInView()
         })
         .catch((error) => {
-            console.error(error.message)
-            errorMessage.innerText = error.message
-    })
+            if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
+                errorMessage.innerText = 'Email already in use.'
+            } else if (error.message === 'Firebase: Error (auth/missing-password).') {
+                errorMessage.innerText = 'Password missing.'
+            } else if (error.message === 'Firebase: Error (auth/invalid-email).') {
+                errorMessage.innerText = 'Invalid Email.'
+            } else if (error.message === 'Firebase: Error (auth/missing-email).') {
+                errorMessage.innerText = 'Email missing.'
+            } else if (error.message === 'Firebase: Password should be at least 6 characters (auth/weak-password).') {
+                errorMessage.innerText = 'Password must be at least 6 characters!'
+            } else {
+                console.error(error.message)
+            }})
 }
 
 // Log out
@@ -647,7 +668,7 @@ function authSignOut() {
             navModal.style.display = 'none'
             showLoggedOutView()
         }).catch((error) => {
-            console.error(error.message)
+            // console.error(error.message)
         })
 }
 
@@ -695,7 +716,7 @@ async function addHabitToDB(habitName, frequency, tracking, details, user) {
             })
 
     } catch (error) {
-        console.error(error.message)
+        //console.error(error.message)
     }
 }
 
