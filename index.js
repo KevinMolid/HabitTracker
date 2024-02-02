@@ -77,6 +77,7 @@ const navModalOpenBtn = document.getElementById('nav-modal-open-btn')
 /* Nav modal */
 const navModal = document.getElementById('nav-modal')
 const navModalCloseBtn = document.getElementById('nav-modal-close-btn')
+const darkModeToggle = document.getElementById('dark-mode-toggle')
 const signOutBtn = document.getElementById('sign-out-btn')
 
 /* User section */
@@ -109,6 +110,10 @@ const colorBtns = document.getElementsByClassName("color-btn")
 
 
 /* ========== FUNCTIONS ========== */
+function toggleLightMode() {
+    document.querySelector('body').classList.toggle('light-mode')
+}
+
 /* == Habit functions == */
 function clearAll(element) {
     element.innerHTML = ''
@@ -432,6 +437,8 @@ signOutBtn.addEventListener('click', authSignOut)
 navModalCloseBtn.addEventListener('click', function(){
     navModal.style.display = 'none'
 })
+
+darkModeToggle.addEventListener('click', toggleLightMode)
 
 userSection.addEventListener('click', function(){
     toggleBlockElement(userSectionEdit)

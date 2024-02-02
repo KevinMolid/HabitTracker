@@ -23,6 +23,20 @@
   --bg-4: #444;
 }
 
+.light-mode {
+  --txt-1: #000;
+  --txt-2: #555;
+  --txt-2-hover: #444;
+  --txt-3: #999;
+  --bg-1: #cde1ed;
+  --bg-2: #FFF;
+  --bg-2-hover: #f7fafc;
+  --bg-2-variant: #eef5f9;
+  --bg-3: #e3eef5;
+  --bg-3-hover: #d7e7f1;
+  --bg-4: #c1dae9;
+}
+
 
 /* Basic Reset */
 * {
@@ -112,7 +126,7 @@ nav {
   min-width: 48px;
   height: 48px;
   padding: 4px;
-  color: rgba(256, 256, 256, 0.7);
+  color: var(--txt-2);
   font-size: 1.6rem;
   background: none;
 }
@@ -159,7 +173,6 @@ nav {
 
 .buy-coffee-btn {
   font-size: 1.2rem;
-  color: var(--txt-1);
   padding: 0.5em 2em;
 }
 
@@ -441,6 +454,10 @@ main {
   color: var(--txt-2);
 }
 
+.days li.active {
+  color: #FFF;
+}
+
 .days li.active .date-wrapper::before {
   background: var(--orange);
 }
@@ -624,7 +641,7 @@ ul {
 button {
     display: inline-block;
     background: var(--orange);
-    color: var(--txt-1);
+    color: #fff;
     border: none;
     padding: 10px 20px;
     margin: 10px 0;
@@ -737,7 +754,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: var(--bg-2);
+    background-color: var(--bg-3);
     color: var(--txt-2);
     text-align: center;
     width: 100%;
