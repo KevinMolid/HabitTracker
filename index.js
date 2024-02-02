@@ -81,7 +81,8 @@ const navModalOpenBtn = document.getElementById('nav-modal-open-btn')
 /* Nav modal */
 const navModal = document.getElementById('nav-modal')
 const navModalCloseBtn = document.getElementById('nav-modal-close-btn')
-const lightModeToggle = document.getElementById('light-mode-toggle')
+const lightModeToggle = document.getElementById('lightmode-toggle')
+const lightModeToggleLabel = document.getElementById('lightmode-toggle-label')
 const signOutBtn = document.getElementById('sign-out-btn')
 
 /* User section */
@@ -117,11 +118,15 @@ const colorBtns = document.getElementsByClassName("color-btn")
 function enableLightMode() {
     body.classList.add('light-mode')
     localStorage.setItem('lightMode', 'enabled')
+    lightModeToggle.checked = false
+    lightModeToggleLabel.innerText = 'Light'
 }
 
 function disableLightMode() {
     body.classList.remove('light-mode')
     localStorage.setItem('lightMode', null)
+    lightModeToggle.checked = true
+    lightModeToggleLabel.innerText = 'Dark'
 }
 
 /* == Habit functions == */
@@ -586,6 +591,8 @@ onAuthStateChanged(auth, (user) => {
 
 if (lightMode === 'enabled') {
     enableLightMode()
+}   else {
+    disableLightMode()
 }
 showLoggedOutView()
 
