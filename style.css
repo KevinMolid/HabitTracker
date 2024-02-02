@@ -9,6 +9,32 @@
   --green-hover: #20c246;
   --purple: #8d4cf8;
   --purple-hover: #7f44df;
+
+  --txt-1: #FFF;
+  --txt-2: #999;
+  --txt-2-hover: #AAA;
+  --txt-3: #444;
+  --bg-1: #111;
+  --bg-2: #222;
+  --bg-2-hover: #292929;
+  --bg-2-variant: #191919;
+  --bg-3: #333;
+  --bg-3-hover: #393939;
+  --bg-4: #444;
+}
+
+.light-mode {
+  --txt-1: #000;
+  --txt-2: #555;
+  --txt-2-hover: #444;
+  --txt-3: #999;
+  --bg-1: #cde1ed;
+  --bg-2: #FFF;
+  --bg-2-hover: #f7fafc;
+  --bg-2-variant: #eef5f9;
+  --bg-3: #e3eef5;
+  --bg-3-hover: #d7e7f1;
+  --bg-4: #c1dae9;
 }
 
 
@@ -28,8 +54,8 @@ a {
 /* Layout */
 
 body {
-    background-color: #111;
-    color: #fff;
+    background-color: var(--bg-1);
+    color: var(--txt-1);
     line-height: 1.6;
     display: flex;
     flex-direction: column;
@@ -44,8 +70,8 @@ body {
 
 .main-header {
   width: 100svw;
-    background: #333;
-    color: #fff;
+    background: var(--bg-3);
+    color: var(--txt-1);
     text-align: center;
     padding: 0.5em 16px 0.5em 20px;
     display: flex;
@@ -100,13 +126,13 @@ nav {
   min-width: 48px;
   height: 48px;
   padding: 4px;
-  color: rgba(256, 256, 256, 0.7);
+  color: var(--txt-2);
   font-size: 1.6rem;
   background: none;
 }
 
 .menu-icon:hover {
-  color: #FFF;
+  color: var(--txt-1);
   background: none;
 }
 
@@ -117,7 +143,7 @@ nav {
   min-width: 310px;
   max-width: 500px;
   height: 100svh;
-  background: #333;
+  background: var(--bg-3);
   position: fixed;
   top: 0;
   right: 0;
@@ -135,19 +161,18 @@ nav {
 
 .buy-coffee-wrapper {
   padding: 2em 1.5em 1.5em;
-  background: #222;
+  background: var(--bg-2);
   border-radius: 5px;
 }
 
 .buy-coffee-wrapper > p {
-  color: #AAA;
+  color: var(--txt-2);
   margin-block: 0.8em;
   line-height: 1.4;
 }
 
 .buy-coffee-btn {
   font-size: 1.2rem;
-  color: #FFFFFF;
   padding: 0.5em 2em;
 }
 
@@ -165,8 +190,8 @@ nav {
 
 .auth-input {
   width: 100%;
-  background: #222;
-  color: #fff;
+  background: var(--bg-2);
+  color: var(--txt-1);
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -195,14 +220,13 @@ nav {
 .secondary-btn,
 .provider-btn {
   width: 100%;
-  color: #aaa;
-  background: #333;
+  color: var(--txt-2);
+  background: var(--bg-3);
 }
 
 .secondary-btn:hover,
 .provider-btn:hover {
-  color: #aaa;
-  background: #393939;
+  background: var(--bg-3-hover);
 }
 
 .google-btn-logo {
@@ -218,7 +242,7 @@ nav {
 }
 
 .error-message {
-  color: #ccc;
+  color: var(--txt-2);
   text-align: center;
 }
 
@@ -249,7 +273,7 @@ main {
 }
 
 .user-section:hover {
-  background: #222;
+  background: var(--bg-2);
   cursor: pointer;
 }
 
@@ -258,7 +282,7 @@ main {
 }
 
 .user-section-text > p {
-  color: #999;
+  color: var(--txt-2);
 }
 
 .user-section img {
@@ -267,7 +291,7 @@ main {
   object-fit: cover;
   border-radius: 50%;
   border: none;
-  background: #999;
+  background: var(--bg-3);
 }
 
 .user-section-edit-icon {
@@ -275,7 +299,7 @@ main {
   font-size: 1.2rem;
   top: 0.5em;
   right: 0.5em;
-  color: #999;
+  color: var(--txt-2);
   opacity: 0;
 }
 
@@ -286,7 +310,7 @@ main {
 /* User edit */
 .user-section-edit {
   padding: 20px;
-  background: #222;
+  background: var(--bg-2);
   margin-bottom: 0.5em;
 }
 
@@ -298,7 +322,7 @@ main {
 
 .calendar {
   position: relative;
-  background: #222;
+  background: var(--bg-2);
   border-radius: 5px;
   margin-bottom: 1em;
   padding: 1em 1em 2em;
@@ -323,7 +347,7 @@ main {
 }
 
 .prev-next-icon:hover {
-  background: #444;
+  background: var(--bg-4);
 }
 
 .current-date { /* Month Year */
@@ -377,7 +401,7 @@ main {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #444444;
+  background: var(--bg-4);
   pointer-events: none;
 }
 
@@ -402,7 +426,7 @@ main {
 }
 
 .tick-inactive {
-  background: #444444;
+  background: var(--bg-4);
 }
 
 .date-wrapper {
@@ -423,11 +447,15 @@ main {
 }
 
 .days li:hover .date-wrapper::before {
-  background: #444;
+  background: var(--bg-4);
 }
 
 .days li.inactive {
-  color: #999;
+  color: var(--txt-2);
+}
+
+.days li.active {
+  color: #FFF;
 }
 
 .days li.active .date-wrapper::before {
@@ -440,7 +468,7 @@ main {
   width: 100%;
   height: 100%;
   position: absolute;
-  background: #191919;
+  background: var(--bg-2-variant);
   top: 0;
   left: 0;
   border-radius: 5px;
@@ -450,7 +478,7 @@ main {
 .calendar-modal header {
   padding: 2em 0 1em;
   text-align: center;
-  background: #222;
+  background: var(--bg-2);
   border-radius: 5px 5px 0 0;
   cursor: pointer;
 }
@@ -461,7 +489,7 @@ main {
 }
 
 .calendar-modal header:hover {
-  background: #292929;
+  background: var(--bg-2-hover);
 }
 
 /* Habits */
@@ -480,7 +508,7 @@ ul {
   position: relative;
   display: flex;
   flex-direction: column;
-  background: #222;
+  background: var(--bg-2);
   margin-bottom: 10px;
   border-radius: 5px;
 }
@@ -504,14 +532,14 @@ ul {
 }
 
 .habit-name:hover {
-  background: #292929;
+  background: var(--bg-2-hover);
 }
 
 .habit-header input {
   width: 100px;
   padding: 10px;
-  color: #FFFFFF;
-  background: #333;
+  color: var(--txt-1);
+  background: var(--bg-3);
   border: none;
   border-radius: 5px;
 }
@@ -530,24 +558,24 @@ ul {
 .habit .edit-btn,
 .delete-all-habits-btn,
 .close-warning-modal-btn {
-  color: #999;
-  background: #333;
+  color: var(--txt-2);
+  background: var(--bg-3);
 }
 
 .habit .edit-btn:hover,
 .delete-all-habits-btn:hover,
 .close-warning-modal-btn:hover {
-  color: #aaa;
-  background: #393939;
+  color: var(--txt-2);
+  background: var(--bg-3-hover);
 }
 
 .habit .delete-btn {
-  color: #999;
+  color: var(--txt-2);
   background: none;
 }
 
 .habit .delete-btn:hover {
-  color: #aaa;
+  color: var(--txt-2-hover);
   background: none;
 }
 
@@ -555,14 +583,14 @@ ul {
   width: 100%;
   display: none; /* grid */
   grid-template-columns: 1fr 1fr;
-  background: #191919;
+  background: var(--bg-2-variant);
   padding: 0 1em;
 }
 
 .habit-details h4 {
   font-size: 0.8rem;
   font-weight: 400;
-  color: #999;
+  color: var(--txt-2);
   margin-top: 1em;
 }
 
@@ -637,14 +665,14 @@ button:hover {
 .exists-message {
   display: none; /* inline */
   margin-left: 8px;
-  color: #fff;
-  background: #333;
+  color: var(--txt-1);
+  background: var(--bg-3);
   padding: 10px 20px;
   border-radius: 5px;
 }
 
 #habit-form {
-    background: #222;
+    background: var(--bg-2);
     padding: 20px;
     border-radius: 5px;
 }
@@ -654,10 +682,71 @@ form label {
     margin-bottom: 5px;
 }
 
+/* Darkmode / lightmode toggle */
+input[type='checkbox'].toggle {
+  opacity: 0;
+  position: absolute;
+  left: -9000px;
+  top: -9000px;
+}
+
+input[type='checkbox'].toggle + label {
+  color: var(--txt-2);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.6rem;
+  position: relative;
+  margin-bottom: 1em;
+}
+
+input[type='checkbox'].toggle + label:hover {
+  color: var(--txt-1);
+}
+
+input[type='checkbox'].toggle + label::before {
+  content: "";
+  width: 3em;
+  height: 1.5em;
+  background-color: var(--bg-2);
+  border-radius: .75em;
+  margin-right: .5em;
+  transition: background-color 200ms ease-in-out;
+}
+
+input[type='checkbox'].toggle + label::after {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  content: "\2600";
+  width: 1.3em;
+  height: 1.3em;
+  color: #b38711;
+  background-color: #fddf8e;
+  border-radius: .75em;
+  position: absolute;
+  left: .2em;
+  transition: background-color 200ms ease-in-out, color 200ms ease-in-out, transform 200ms ease-in-out;
+}
+
+input[type='checkbox'].toggle:focus + label::before {
+  outline: 2px solid black;   
+}
+
+input[type='checkbox'].toggle:checked + label::after {
+  color: #824792;
+  background-color: #bb86fc;
+  transform: translateX(1.3em);
+  content: "\2688";
+}
+
+
+/* Back to Form */
+
 input[type='text'],
 form select {
-    color: #fff;
-    background: #333;
+    color: var(--txt-1);
+    background: var(--bg-3);
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -666,8 +755,8 @@ form select {
 }
 
 form textarea {
-  color: #fff;
-  background: #333;
+  color: var(--txt-1);
+  background: var(--bg-3);
   width: 100%;
   padding: 8px;
   border: none;
@@ -726,8 +815,8 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #222;
-    color: #999;
+    background-color: var(--bg-3);
+    color: var(--txt-2);
     text-align: center;
     width: 100%;
     height: 40px;
@@ -745,12 +834,12 @@ footer {
 .warning-modal {
   position: relative;
   display: none; /* flex */
-  color: #FFFFFF;
+  color: var(--txt-1);
   flex-direction: column;
   align-items: center;
   text-align: center;
   padding: 1em 1em 1em;
-  background: #222;
+  background: var(--bg-2);
   gap: 0.5em;
   border-radius: 5px;
   margin-bottom: 1em;
@@ -774,11 +863,11 @@ footer {
 }
 
 .grey {
-  color: #AAAAAA;
+  color: var(--txt-2);
 }
 
 .dark-grey {
-  color: #444444;
+  color: var(--bg-4);
 }
 
 .inline {

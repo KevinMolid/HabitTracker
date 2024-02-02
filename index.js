@@ -39,6 +39,7 @@ const db = getFirestore(app);
 
 /* ========== VARIABLES ========== */
 let habitList = []
+let lightMode = localStorage.getItem('lightMode')
 
 const currentDate = document.querySelector('.current-date'),
 daysTag = document.querySelector('.days'),
@@ -60,6 +61,9 @@ const colors = ['', 'pink', 'blue', 'orange', 'green', 'purple']
 const viewLoggedOut = document.getElementById("logged-out-view")
 const viewLoggedIn = document.getElementById("logged-in-view")
 
+/* body */
+const body = document.querySelector('body')
+
 /* == Logged out elements == */
 const signInWithGoogleBtn = document.getElementById('sign-in-with-google-btn')
 const signInBtn = document.getElementById('sign-in-btn')
@@ -77,6 +81,8 @@ const navModalOpenBtn = document.getElementById('nav-modal-open-btn')
 /* Nav modal */
 const navModal = document.getElementById('nav-modal')
 const navModalCloseBtn = document.getElementById('nav-modal-close-btn')
+const lightModeToggle = document.getElementById('lightmode-toggle')
+const lightModeToggleLabel = document.getElementById('lightmode-toggle-label')
 const signOutBtn = document.getElementById('sign-out-btn')
 
 /* User section */
@@ -109,6 +115,20 @@ const colorBtns = document.getElementsByClassName("color-btn")
 
 
 /* ========== FUNCTIONS ========== */
+function enableLightMode() {
+    body.classList.add('light-mode')
+    localStorage.setItem('lightMode', 'enabled')
+    lightModeToggle.checked = false
+    lightModeToggleLabel.innerText = 'Light'
+}
+
+function disableLightMode() {
+    body.classList.remove('light-mode')
+    localStorage.setItem('lightMode', null)
+    lightModeToggle.checked = true
+    lightModeToggleLabel.innerText = 'Dark'
+}
+
 /* == Habit functions == */
 function clearAll(element) {
     element.innerHTML = ''
@@ -433,6 +453,15 @@ navModalCloseBtn.addEventListener('click', function(){
     navModal.style.display = 'none'
 })
 
+lightModeToggle.addEventListener('click', () => {
+    lightMode = localStorage.getItem('lightMode')
+    if (lightMode !== 'enabled') {
+        enableLightMode()
+    } else {
+        disableLightMode()
+    }
+})
+
 userSection.addEventListener('click', function(){
     toggleBlockElement(userSectionEdit)
 })
@@ -560,6 +589,11 @@ onAuthStateChanged(auth, (user) => {
     }
 })
 
+if (lightMode === 'enabled') {
+    enableLightMode()
+}   else {
+    disableLightMode()
+}
 showLoggedOutView()
 
 /* === Functions === */
