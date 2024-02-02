@@ -23,7 +23,8 @@
   --bg-4: #444;
 
   --header-bg: var(--bg-3);
-  --user-section-hover: var(--bg-2)
+  --user-section-hover: var(--bg-2);
+  --nav-modal-bg: var(--bg-3);
 }
 
 .light-mode {
@@ -31,16 +32,17 @@
   --txt-2: #555;
   --txt-2-hover: #444;
   --txt-3: #999;
-  --bg-1: #f2f1f6; /* main background */
+  --bg-1: #f6f4f1; /* main background */
   --bg-2: #FFF; /* Panels */
-  --bg-2-hover: #f9f8fc; /* Habit hovers */
+  --bg-2-hover: #fcfcf8; /* Habit hovers */
   --bg-2-variant: #FFF; /* Secondary panels */
-  --bg-3: #e3e2e9; /* Buttons, header and nav modal */
-  --bg-3-hover: #d7d5df;
-  --bg-4: #e2e1e6;
+  --bg-3: #e9e7e2; /* Buttons, header and nav modal */
+  --bg-3-hover: #dfddd5;
+  --bg-4: #e6e5e1;
 
   --header-bg: #fff;
-  --user-section-hover: var(--bg-3)
+  --user-section-hover: var(--bg-3);
+  --nav-modal-bg: var(--bg-1);
 }
 
 
@@ -149,7 +151,7 @@ nav {
   min-width: 310px;
   max-width: 500px;
   height: 100svh;
-  background: var(--bg-3);
+  background: var(--nav-modal-bg);
   position: fixed;
   top: 0;
   right: 0;
@@ -733,10 +735,6 @@ input[type='checkbox'].toggle + label::after {
   position: absolute;
   left: .2em;
   transition: background-color 200ms ease-in-out, color 200ms ease-in-out, transform 200ms ease-in-out;
-}
-
-input[type='checkbox'].toggle:focus + label::before {
-  outline: 2px solid black;   
 }
 
 input[type='checkbox'].toggle:checked + label::after {
