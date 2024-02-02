@@ -35,12 +35,12 @@
   --bg-2: #FFF; /* Panels */
   --bg-2-hover: #f9f8fc; /* Habit hovers */
   --bg-2-variant: #FFF; /* Secondary panels */
-  --bg-3: #fff; /* Buttons, header and nav modal */
+  --bg-3: #e3e2e9; /* Buttons, header and nav modal */
   --bg-3-hover: #d7d5df;
   --bg-4: #e2e1e6;
 
   --header-bg: #fff;
-  --user-section-hover: var(--bg-3)
+  --user-section-hover: var(--bg-3-hover)
 }
 
 
