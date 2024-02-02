@@ -21,6 +21,9 @@
   --bg-3: #333;
   --bg-3-hover: #393939;
   --bg-4: #444;
+
+  --header-bg: var(--bg-3);
+  --user-section-hover: var(--bg-2)
 }
 
 .light-mode {
@@ -28,13 +31,16 @@
   --txt-2: #555;
   --txt-2-hover: #444;
   --txt-3: #999;
-  --bg-1: #cde1ed;
-  --bg-2: #FFF;
-  --bg-2-hover: #f7fafc;
-  --bg-2-variant: #eef5f9;
-  --bg-3: #e3eef5;
-  --bg-3-hover: #d7e7f1;
-  --bg-4: #c1dae9;
+  --bg-1: #f2f1f6; /* main background */
+  --bg-2: #FFF; /* Panels */
+  --bg-2-hover: #f9f8fc; /* Habit hovers */
+  --bg-2-variant: #FFF; /* Secondary panels */
+  --bg-3: #e3e2e9; /* Buttons, header and nav modal */
+  --bg-3-hover: #d7d5df;
+  --bg-4: #e2e1e6;
+
+  --header-bg: #fff;
+  --user-section-hover: var(--bg-3-hover)
 }
 
 
@@ -70,7 +76,7 @@ body {
 
 .main-header {
   width: 100svw;
-    background: var(--bg-3);
+    background: var(--header-bg);
     color: var(--txt-1);
     text-align: center;
     padding: 0.5em 16px 0.5em 20px;
@@ -273,7 +279,7 @@ main {
 }
 
 .user-section:hover {
-  background: var(--bg-2);
+  background: var(--user-section-hover);
   cursor: pointer;
 }
 
