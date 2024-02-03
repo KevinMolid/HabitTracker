@@ -25,6 +25,10 @@
   --header-bg: var(--bg-3);
   --user-section-hover: var(--bg-2);
   --nav-modal-bg: var(--bg-3);
+  --input-bg: var(--bg-3);
+
+  --shadow-1: rgba(0, 0, 0, 0);
+  --shadow-2: #111;
 }
 
 .light-mode {
@@ -32,17 +36,21 @@
   --txt-2: #555;
   --txt-2-hover: #444;
   --txt-3: #999;
-  --bg-1: #f6f4f1; /* main background */
+  --bg-1: #f7f7f7; /* main background */
   --bg-2: #FFF; /* Panels */
-  --bg-2-hover: #fcfcf8; /* Habit hovers */
+  --bg-2-hover: #FBFBFB; /* Habit hovers */
   --bg-2-variant: #FFF; /* Secondary panels */
-  --bg-3: #e9e7e2; /* Buttons, header and nav modal */
-  --bg-3-hover: #dfddd5;
-  --bg-4: #e6e5e1;
+  --bg-3: #FFF; /* Buttons, footer */
+  --bg-3-hover: #FBFBFB; /* Buttons hover */
+  --bg-4: #eeeeee;
 
   --header-bg: #fff;
   --user-section-hover: var(--bg-3);
   --nav-modal-bg: var(--bg-1);
+  --input-bg: var(--bg-1);
+
+  --shadow-1: rgba(0, 0, 0, 0.2);
+  --shadow-2: rgba(0, 0, 0, 0.2);
 }
 
 
@@ -84,6 +92,7 @@ body {
     padding: 0.5em 16px 0.5em 20px;
     display: flex;
     justify-content: space-between;
+    box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .logo {
@@ -156,7 +165,7 @@ nav {
   top: 0;
   right: 0;
   z-index: 2;
-  box-shadow: 0 0 40px #111;
+  box-shadow: 0 0 40px var(--shadow-2);
   padding: 1em;
 }
 
@@ -171,6 +180,7 @@ nav {
   padding: 2em 1.5em 1.5em;
   background: var(--bg-2);
   border-radius: 5px;
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .buy-coffee-wrapper > p {
@@ -319,7 +329,8 @@ main {
 .user-section-edit {
   padding: 20px;
   background: var(--bg-2);
-  margin-bottom: 0.5em;
+  margin-bottom: 1em;
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .user-section-edit > .secondary-btn {
@@ -334,6 +345,7 @@ main {
   border-radius: 5px;
   margin-bottom: 1em;
   padding: 1em 1em 2em;
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .calendar-header {
@@ -519,6 +531,7 @@ ul {
   background: var(--bg-2);
   margin-bottom: 10px;
   border-radius: 5px;
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .habit-header {
@@ -564,10 +577,15 @@ ul {
 }
 
 .habit .edit-btn,
-.delete-all-habits-btn,
 .close-warning-modal-btn {
   color: var(--txt-2);
+  background: var(--bg-4);
+}
+
+.delete-all-habits-btn {
+  color: var(--txt-2);
   background: var(--bg-3);
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .habit .edit-btn:hover,
@@ -717,6 +735,7 @@ input[type='checkbox'].toggle + label::before {
   width: 3em;
   height: 1.5em;
   background-color: var(--bg-2);
+  box-shadow: 0 0 3px var(--shadow-1);
   border-radius: .75em;
   margin-right: .5em;
   transition: background-color 200ms ease-in-out;
@@ -750,7 +769,7 @@ input[type='checkbox'].toggle:checked + label::after {
 input[type='text'],
 form select {
     color: var(--txt-1);
-    background: var(--bg-3);
+    background: var(--input-bg);
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -760,7 +779,7 @@ form select {
 
 form textarea {
   color: var(--txt-1);
-  background: var(--bg-3);
+  background: var(--input-bg);
   width: 100%;
   padding: 8px;
   border: none;
@@ -827,6 +846,7 @@ footer {
     position: absolute;
     bottom: 0;
     clear: both;
+    box-shadow: 0 0 3px var(--shadow-1);
 }
 
 .content-wrapper {
@@ -847,6 +867,7 @@ footer {
   gap: 0.5em;
   border-radius: 5px;
   margin-bottom: 1em;
+  box-shadow: 0 0 3px var(--shadow-1);
 }
 
 /* */
